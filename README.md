@@ -1,12 +1,6 @@
-                                
+# Java基础
 
-# 知识笔记
-
-
-
-## Java基础
-
-### 1、equals和hashcode
+## 1、equals和hashcode
 
 ​	hashcode 是通过散列方法进行计算，并将算出的整数作为内存地址进行存储。即便是通过桶索引（bucketIndex）找到了对象也要调用一个或者多个equals方法去一个一个比较，成功了才属于真正的对象相等。因为一个桶里面只能装一个entry对象，但是entry对象是可以包含一个索引值去指向另一个entry，最终可以形成entry链；
 
@@ -14,25 +8,27 @@
 
 [通过java HashMap的存取方式来学习Hash存储机制 ]: http://www.zuidaima.com/share/1850411710188544.htm
 
-## Spring框架
 
-### 1、让我们谈一谈AOP的理解
+
+# Spring框架
+
+## 1、让我们谈一谈AOP的理解
 
 AOP的意思是面向切面编程，传统的编程思想是
 
-#### proxy 
+### proxy 
 
 ​	proxy是java内置的动态代理，其特点是无需第三方依赖；
 
 ​	proxy代理的底层逻辑是通过反射的原理，它是可以对多个不同的接口实现类中定义的方法进行代理；
 
-#### cglib
+### cglib
 
 ​	cglib的特点是需要导入第三方依赖；
 
 ​	cglib代理的底层逻辑是通过子类继承父类去重写方法的方式进行动态代理；
 
-### 2、让我们谈一谈对IOC的理解
+## 2、让我们谈一谈对IOC的理解
 
 ​	IOC（invest of controll） ，意思是控制反转，它是一种设计思想，并不是一种技术框架或者结构。在传统的创建对象中，是通过对象内部的new方法去实例一个对象，而IOC则是通过特定的容器去扫描注解，自动去创建依赖对象。
 
@@ -40,51 +36,51 @@ AOP的意思是面向切面编程，传统的编程思想是
 
 
 
-## JVM
+# JVM
 
-### 1、结构概览
+## 1、结构概览
 
 class文件 -> 类加载器 -> 运行时数据区（Java栈、本地方法栈、方法区、堆、程序计数器）-> 执行引擎（windows、linux、mac）->本地方法接口（native方法）<- 本地方法库
 
-<img src="/Users/chenjiaofu/Library/Application Support/typora-user-images/image-20211213222811914.png" alt="image-20211213222811914" style="zoom: 50%;" />
+![image-20211215094208923](image/image-20211215094208923-9552608.png)
 
 
 
 
 
-## 数据库
+# 数据库
 
-### mysql
+## mysql
 
 
 
-## 中间件
+# 中间件
 
-### Redis
+## Redis
 
-### RocketMQ
+## RocketMQ
 
-## 算法
+# 算法
 
-### 八大排序算法
+## 八大排序算法
 
-![img](https://upload-images.jianshu.io/upload_images/1156494-62f859c2ac6f95ff.png)
+![img](https://upload-images.jianshu.io/upload_images/1156494-62f859c2ac6f95ff.png![image-20211215094147774](image/image-20211215094147774-9552608.png)
 
-#### 1、冒泡排序
+### 1、冒泡排序
 
-#### 2、快速排序
+### 2、快速排序
 
-#### 3、归并排序
+### 3、归并排序
 
-#### 4、希尔排序
+### 4、希尔排序
 
-#### 5、直接插入排序
+### 5、直接插入排序
 
-#### 6、基数排序
+### 6、基数排序
 
-#### 7、堆排序
+### 7、堆排序
 
-#### 8、简单选择排序
+### 8、简单选择排序
 
 # 软件环境
 
@@ -110,7 +106,7 @@ java -version
 
 如果显示如下图内容，则表示JDK安装成功。
 
-<img src="/Users/chenjiaofu/Library/Application Support/typora-user-images/image-20211214144246318.png" alt="image-20211214144246318"  />
+![image-20211215094118551](image/image-20211215094118551-9552608.png)
 
 
 
@@ -203,7 +199,7 @@ chmod +x /usr/local/Tomcat8.5/bin/*.sh
 sed -i 's/Connector port="8080"/Connector port="80"/' /usr/local/Tomcat8.5/conf/server.xml
 ```
 
-![image-20211214152510175](/Users/chenjiaofu/Library/Application Support/typora-user-images/image-20211214152510175.png)
+![image-20211214152510175](/Users/chenjiaofu/Library/Application Support/typora-user-images/image-20211214152510175.png![image-20211215094229969](image/image-20211215094229969-9552608.png)
 
 6. 启动Tomcat。
 
@@ -215,7 +211,7 @@ sed -i 's/Connector port="8080"/Connector port="80"/' /usr/local/Tomcat8.5/conf/
 
 直接访问你的公网IP即可，如果你是阿里云ECS需添加安全组策略。
 
-![image-20211214153239161](/Users/chenjiaofu/Library/Application Support/typora-user-images/image-20211214153239161.png)
+![image-20211214153239161](/Users/chenjiaofu/Library/Application Support/typora-user-images/image-20211214153239161.png![image-20211215094242608](image/image-20211215094242608-9552608.png)
 
 ## Mac下安装Maven
 
@@ -223,9 +219,7 @@ sed -i 's/Connector port="8080"/Connector port="80"/' /usr/local/Tomcat8.5/conf/
 
 下载地址：https://maven.apache.org/download.cgi
 
-![image-20211214170116842](/Users/chenjiaofu/Library/Application Support/typora-user-images/image-20211214170116842.png)
-
-
+![image-20211215094258526](image/image-20211215094258526-9552608.png)
 
 2、将下载的压缩包解压到/usr/local文件夹下
 
@@ -258,7 +252,7 @@ export PATH=$MAVEN_HOME/bin:$PATH
 
 生效后 测试 mvn -v 查看是否出现maven版本
 
-![image-20211214195954176](/Users/chenjiaofu/Library/Application Support/typora-user-images/image-20211214195954176.png)
+![image-20211215094314698](image/image-20211215094314698-9552608.png)
 
 
 
@@ -318,8 +312,22 @@ export PATH=$MAVEN_HOME/bin:$PATH
 
 
 
+# Github
 
+## MAC系统下绑定github,ssh key
 
-# 阿里云ECS地址
+[MAC系统下绑定github,ssh key]: https://www.jianshu.com/p/f008d9fe3f34/
 
-47.97.116.248
+## 常用指令
+
+```
+git config --global --edit //全局打开配置文件
+
+git pull //更新
+git clone xxx  //从服务器上将代码给拉下来
+git commit -am "提交的注释" //提交代码
+git add [file1] [file2] [directory1] //添加文件或文件夹（包括文件夹下所有文件）
+git rm [file1] [directory1] //删除文件或文件夹
+git push //将本地文件推送到云端
+
+```
