@@ -42,7 +42,7 @@ AOP的意思是面向切面编程，传统的编程思想是
 
 class文件 -> 类加载器 -> 运行时数据区（Java栈、本地方法栈、方法区、堆、程序计数器）-> 执行引擎（windows、linux、mac）->本地方法接口（native方法）<- 本地方法库
 
-![image-20211215094208923](./image/image-20211215094208923-9552608.png)
+![JVM体系结构概览](image/JVM体系结构概览.png)
 
 
 
@@ -64,7 +64,7 @@ class文件 -> 类加载器 -> 运行时数据区（Java栈、本地方法栈、
 
 ## 八大排序算法
 
-![img](https://upload-images.jianshu.io/upload_images/1156494-62f859c2ac6f95ff.png![image-20211215094147774](image/image-20211215094147774-9552608.png)
+![排序算法复杂度对比图](image/排序算法对比图.png)
 
 ### 1、冒泡排序
 
@@ -106,7 +106,7 @@ java -version
 
 如果显示如下图内容，则表示JDK安装成功。
 
-![image-20211215094118551](image/image-20211215094118551-9552608.png)
+![Linux下校验Java环境](image/Linux下校验Java环境.png)
 
 
 
@@ -199,7 +199,7 @@ chmod +x /usr/local/Tomcat8.5/bin/*.sh
 sed -i 's/Connector port="8080"/Connector port="80"/' /usr/local/Tomcat8.5/conf/server.xml
 ```
 
-![image-20211214152510175](/Users/chenjiaofu/Library/Application Support/typora-user-images/image-20211214152510175.png![image-20211215094229969](image/image-20211215094229969-9552608.png)
+![Tomcat端口配置](image/Tomcat端口配置.png)
 
 6. 启动Tomcat。
 
@@ -211,7 +211,7 @@ sed -i 's/Connector port="8080"/Connector port="80"/' /usr/local/Tomcat8.5/conf/
 
 直接访问你的公网IP即可，如果你是阿里云ECS需添加安全组策略。
 
-![image-20211214153239161](/Users/chenjiaofu/Library/Application Support/typora-user-images/image-20211214153239161.png![image-20211215094242608](image/image-20211215094242608-9552608.png)
+![ECS安全组策略](image/ECS安全组策略.png)
 
 ## Mac下安装Maven
 
@@ -219,7 +219,7 @@ sed -i 's/Connector port="8080"/Connector port="80"/' /usr/local/Tomcat8.5/conf/
 
 下载地址：https://maven.apache.org/download.cgi
 
-![image-20211215094258526](image/image-20211215094258526-9552608.png)
+![Maven资源包](image/Maven资源包.png)
 
 2、将下载的压缩包解压到/usr/local文件夹下
 
@@ -252,7 +252,7 @@ export PATH=$MAVEN_HOME/bin:$PATH
 
 生效后 测试 mvn -v 查看是否出现maven版本
 
-![image-20211215094314698](image/image-20211215094314698-9552608.png)
+![校验Maven环境变量](image/校验Maven环境变量.png)
 
 
 
