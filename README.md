@@ -2,11 +2,11 @@
 
 ## 1、equals和hashcode
 
-​	hashcode 是通过散列方法进行计算，并将算出的整数作为内存地址进行存储。即便是通过桶索引（bucketIndex）找到了对象也要调用一个或者多个equals方法去一个一个比较，成功了才属于真正的对象相等。因为一个桶里面只能装一个entry对象，但是entry对象是可以包含一个索引值去指向另一个entry，最终可以形成entry链；
+​	hashcode 是通过散列方法进行计算获取唯一的hash值。在hashMap中将通过hash确认对象在桶的位置。即便是通过桶索引（bucketIndex）找到了对象也要调用一个或者多个equals方法去一个一个比较，成功了才属于真正的对象相等。因为一个桶里面只能装一个entry对象，但是entry对象是可以包含一个索引值去指向另一个entry，最终可以形成entry链；
 
 ​	equal是源于Object类，默认方法是去对比两个对象的引用，可以通过重写equal方法去自定义验证对象是否相等的新规则。
 
-[通过java HashMap的存取方式来学习Hash存储机制 ]: http://www.zuidaima.com/share/1850411710188544.htm
+[hashcode详解]: https://www.cnblogs.com/whgk/p/6071617.html
 
 
 
@@ -28,17 +28,21 @@
 
 ## 4、谈一谈HashMap的扩容机制
 
-初始化HashMap时如果不传容量大小，默认16，加载因子为0.75；当容器容量乘上加载因子小于当前哈希条目时，进行扩容操作，
+初始化HashMap时如果不传容量大小，默认16，加载因子为0.75；当容器容量乘上加载因子小于当前哈希条目时，进行扩容操作，每次扩容都是以2的指数倍进行扩容；
 
-每次扩容都是以2的指数倍进行扩容；Java1.7在扩容时需要对每个元素进行rehash计算扩容后的hash地址，而1.8之后通过hash值与oldCap(旧容器大小)进行&位计算，得出新的hash地址；因为数组是以2的指数倍扩容，就相当于二进制中在多一个高位，如果高位是1，则将其调整到原索引加上oldCap的位置上，如果是0则无需调整。
+Java1.7在扩容时需要对每个元素进行rehash计算扩容后的hash地址，而1.8之后通过hash值和oldCap(旧容器大小)进行&位计算，得出新的hash地址；因为数组是以2的指数倍扩容，就相当于二进制中在多一个高位，如果高位是1，则将其调整到原索引加上oldCap的位置上，如果是0则无需调整。
 
 
 
 ## 5、为什么HashMap扩容的时候是两倍
 
-1）因为在二进制中2的指数减去1，二进制的数n全部为1，再拿n去与hash值进行&位运算可以充分的散列，减少了不必要的hash冲突。
+1）因为在二进制中2的指数减去1，这个结果n的二进制全部为1，再拿n去与hash值进行&位运算可以充分的散列，避免必要的hash冲突。
 
 2）由于扩容后最高位是否为1可以判断元素是否移位，优化性能。
+
+
+
+6、
 
 
 
@@ -82,7 +86,26 @@ AOP的意思是面向切面编程，任何一个系统都是由不同的组件�
 
 ​	IOC容器降低了业务对象替换的复杂性，降低了对象间的耦合；
 
+## 4、BeanFactory和ApplicationContext有什么区别
 
+相同:
+
+- 它们两个都是spring下的IOC容器，都是Interface接口，ApplicationContext继承于BeanFactory（ApplicationContext集成于ListableBeanFactory，ListableBeanFactory继承于BeanFactory）
+- 它们都可以用来配置XML属性，也支持属性的自动注入。
+- 
+
+不同：
+
+- BeanFactory在调用getBean()的时候才实例化Bean（懒汉式），而ApplicationContext是在启动容器的时候实例化Bean（恶汉式）。
+- 因为ApplicationContext是BeanFactory的扩展，提供了更多的功能:支持国际化、事件传递、Bean自动装配、各种不同应用层的Context实现。
+
+## 5、简述spring bean的生命周期？
+
+
+
+
+
+# Mybatis
 
 # JVM
 
@@ -260,6 +283,46 @@ sed -i 's/Connector port="8080"/Connector port="80"/' /usr/local/Tomcat8.5/conf/
 直接访问你的公网IP即可，如果你是阿里云ECS需添加安全组策略。
 
 ![ECS安全组策略](image/ECS安全组策略.png)
+
+## Linux下安装Nginx
+
+1、从nginx官网下载解压包
+
+```
+wget http://nginx.org/download/nginx-1.18.0.tar.gz
+```
+
+2、安装Nginx依赖
+
+```
+yum -y install gcc zlib zlib-devel pcre-devel openssl openssl-devel
+```
+
+3、移动安装包
+
+```
+mv nginx-1.18.0.tar.gz /usr/local/
+```
+
+4、解压压缩包
+
+```
+tar -zxvf nginx-1.18.0.tar.gz
+```
+
+5、进入安装包目录并编译安装
+
+```
+cd nginx-1.18.0.tar.gz/  ## 进入安装包
+./configure							 ## 编译
+make && make install     ## 安装
+```
+
+6、验证是否成功
+
+![Nginx安装验证](image/Nginx安装验证.png)
+
+
 
 ## Mac下安装Maven
 
