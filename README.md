@@ -34,15 +34,13 @@ Java1.7在扩容时需要对每个元素进行rehash计算扩容后的hash地址
 
 
 
-## 5、为什么HashMap扩容的时候是两倍
+## 5、为什么HashMap扩容的时候是二的指数倍
 
 1）因为在二进制中2的指数减去1，这个结果n的二进制全部为1，再拿n去与hash值进行&位运算可以充分的散列，避免必要的hash冲突。
 
 2）由于扩容后最高位是否为1可以判断元素是否移位，优化性能。
 
 
-
-6、
 
 
 
@@ -92,20 +90,64 @@ AOP的意思是面向切面编程，任何一个系统都是由不同的组件�
 
 - 它们两个都是spring下的IOC容器，都是Interface接口，ApplicationContext继承于BeanFactory（ApplicationContext集成于ListableBeanFactory，ListableBeanFactory继承于BeanFactory）
 - 它们都可以用来配置XML属性，也支持属性的自动注入。
-- 
 
 不同：
 
-- BeanFactory在调用getBean()的时候才实例化Bean（懒汉式），而ApplicationContext是在启动容器的时候实例化Bean（恶汉式）。
+- BeanFactory在调用getBean()的时候才实例化Bean（懒加载），而ApplicationContext是在启动容器的时候实例化Bean（非懒加载）。
 - 因为ApplicationContext是BeanFactory的扩展，提供了更多的功能:支持国际化、事件传递、Bean自动装配、各种不同应用层的Context实现。
 
-## 5、简述spring bean的生命周期？
+## 5、Spring扫描底层的原理
+
+1. 首先，通过ResourcePatternResolver获得指定包路径下的所有 .class 文件（Spring源码中将此文件包装成了Resource对象)
+2. 遍历每个Resource对象
+3.  利用MetadataReaderFactory解析Resource对象得到MetadataReader（在Spring源码中MetadataReaderFactory具体的实现类为CachingMetadataReaderFactory，MetadataReader的具体实现类为SimpleMetadataReader）
+4. 利用MetadataReader进行excludeFilters和includeFilters，以及条件注解@Conditional的筛选（条件注解并不能理解:某个类上是否存在@Conditional注解，如果存在则调用注解中所指定的类的match方法进行匹配，匹配成功则通过筛选，匹配失败则pass掉）
+5. 筛选通过后，基于metadataReader生成ScannedGenericBeanDefinition
+6. 再基于metadataReader判断是不是对应的类是不是接口或抽象类
+7. 如果筛选通过，那么就表示扫描到了一个Bean，将ScannedGenericBeanDefinition加入结果集
+
+## 6、Spring启动流程原理
 
 
 
+## 7、简述spring bean的生命周期？
+
+1）实例化（CreateBeanInstance）
+
+​	在Java堆内存开辟空间，属性存放默认值
+
+2）设置属性
+
+1. 用户自定义属性赋值（populateBean）
+2. 容器对象赋值（invokeAwareMethods）
+
+3）初始化 （Initialization）
+
+1. 调用BeanPostProccessor的前置接口-postProcessBeforeInitialization()
+2. 判断当前bean对象是否设置了InitializingBean接口，然后进行属性的设置等基本工作
+3. 如果当前bean对象定义了初始化方法，那么在此处调用初始化方法
+4. 调用BeanPostProccessor的后置接口-postProcessAfterInitialization()
+
+4）调用对象
+
+5）销毁（Destruction）
+
+1. DisposableBean的destory()方法
+2. 自定义的destory-method指定方法
 
 
-# Mybatis
+
+> 参考请别再问Spring Bean的生命周期了！
+>
+> https://www.jianshu.com/p/1dec08d290c1
+
+
+
+## 8、BeanFactory和FactoryBean有什么区别？
+
+
+
+# Mybatis
 
 # JVM
 
@@ -159,19 +201,19 @@ class文件 -> 类加载器 -> 运行时数据区（Java栈、本地方法栈、
 
 1.执行以下命令，查看yum源中JDK版本。
 
-```
+```shell
 yum list java*
 ```
 
 2.执行以下命令，使用yum安装JDK1.8。
 
-```
+```shell
 yum -y install java-1.8.0-openjdk*
 ```
 
 3.执行以下命令，查看是否安装成功。
 
-```
+```shell
 java -version
 ```
 
@@ -187,13 +229,13 @@ java -version
 
 1.如果Centos7以上的系统，由于系统自带mysql会导致版本冲突，请先禁用mysql
 
-```
+```shell
 yum module disable mysql
 ```
 
 2.执行以下命令，下载并安装MySQL官方的Yum Repository。
 
-```
+```shell
 wget http://dev.mysql.com/get/mysql57-community-release-el7-10.noarch.rpm
 yum -y install mysql57-community-release-el7-10.noarch.rpm
 yum -y install mysql-community-server
@@ -201,32 +243,32 @@ yum -y install mysql-community-server
 
 3.执行以下命令，启动 MySQL 数据库。
 
-```
+```shell
 systemctl start mysqld.service
 ```
 
 4.执行以下命令，查看MySQL初始密码。
 
-```
+```shell
 grep "password" /var/log/mysqld.log
 ```
 
 5.执行以下命令，登录数据库。
 
-```
+```shell
 mysql -uroot -p
 ```
 
 6. 执行以下命令，修改MySQL默认密码。
 
-```
+```shell
 set global validate_password_policy=0;  #修改密码安全策略为低（只校验密码长度，至少8位）。
 ALTER USER 'root'@'localhost' IDENTIFIED BY '12345678';
 ```
 
 7.执行以下命令，授予root用户远程管理权限。
 
-```
+```shell
 GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY '12345678';
 ```
 
@@ -240,25 +282,25 @@ GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY '12345678';
 
 说明:该资源包可能会失效，请自行去清华镜像官网下载。
 
-```
+```shell
 wget https://mirrors.tuna.tsinghua.edu.cn/apache/tomcat/tomcat-8/v8.5.73/bin/apache-tomcat-8.5.73.tar.gz
 ```
 
 2.执行以下命令，解压刚刚下载Tomcat包。
 
-```
+```shell
 tar -zxvf apache-tomcat-8.5.73.tar.gz
 ```
 
 3.执行以下命令，修改Tomcat名字。
 
-```
+```shell
 mv apache-tomcat-8.5.73 /usr/local/Tomcat8.5
 ```
 
 4.执行以下命令，为Tomcat授权。
 
-```
+```shell
 chmod +x /usr/local/Tomcat8.5/bin/*.sh
 ```
 
@@ -266,7 +308,7 @@ chmod +x /usr/local/Tomcat8.5/bin/*.sh
 
 说明： Tomcat默认端口号为8080。
 
-```
+```shell
 sed -i 's/Connector port="8080"/Connector port="80"/' /usr/local/Tomcat8.5/conf/server.xml
 ```
 
@@ -274,7 +316,7 @@ sed -i 's/Connector port="8080"/Connector port="80"/' /usr/local/Tomcat8.5/conf/
 
 6. 启动Tomcat。
 
-```
+```shell
 /usr/local/Tomcat8.5/bin/./startup.sh
 ```
 
@@ -288,39 +330,78 @@ sed -i 's/Connector port="8080"/Connector port="80"/' /usr/local/Tomcat8.5/conf/
 
 1、从nginx官网下载解压包
 
-```
+```shell
 wget http://nginx.org/download/nginx-1.18.0.tar.gz
 ```
 
 2、安装Nginx依赖
 
-```
+```shell
 yum -y install gcc zlib zlib-devel pcre-devel openssl openssl-devel
 ```
 
 3、移动安装包
 
-```
+```shell
 mv nginx-1.18.0.tar.gz /usr/local/
 ```
 
 4、解压压缩包
 
-```
+```shell
 tar -zxvf nginx-1.18.0.tar.gz
 ```
 
 5、进入安装包目录并编译安装
 
-```
+```shell
 cd nginx-1.18.0.tar.gz/  ## 进入安装包
 ./configure							 ## 编译
 make && make install     ## 安装
 ```
 
-6、验证是否成功
+shell6、验证是否成功
 
 ![Nginx安装验证](image/Nginx安装验证.png)
+
+
+
+## Linux下安装Vue运行环境
+
+1、下载node.js解压包
+
+```shell
+wget https://nodejs.org/download/release/v9.11.2/node-v9.11.2-linux-x64.tar.xz
+```
+
+2、解压
+
+```shell
+tar -xf node-v9.11.2-linux-x64.tar.xz
+```
+
+3、配置全局变量
+
+```shell
+ln -s /usr/local/nodejs/node-v9.11.2-linux-x64/bin/npm /usr/local/bin/ 	##建立软连接，变为全局
+rm -f /usr/local/bin/node
+ln -s /usr/local/nodejs/node-v9.11.2-linux-x64/bin/node /usr/local/bin/ ##建立软连接，变为全局
+node -v ##检验nodejs是否已变为全局
+```
+
+<img src="image/检验nodejs全局配置是否生效.png" alt="检验nodejs全局配置是否生效" style="zoom:150%;" />
+
+
+
+4、安装cnpm
+
+```shell
+npm install -g cnpm --registry=https://registry.npm.taobao.org
+
+##建立软连接
+rm -f  /usr/local/bin/cnpm
+ln -s /usr/local/nodejs/node-v9.11.2-linux-x64/bin/cnpm  /usr/local/bin/cnpm
+```
 
 
 
@@ -336,7 +417,7 @@ make && make install     ## 安装
 
 ​	通过指令
 
-```
+```shell
 cd /usr/local
 sudo mv /Users/chenjiaofu/Downloads/apache-maven-3.8.4-bin.tar.gz ./
 tar zxvf apache-maven-3.8.4-bin.tar.gz
@@ -354,7 +435,7 @@ tar zxvf apache-maven-3.8.4-bin.tar.gz
 
 将下面两句拷贝到文件内
 
-```
+```tex
 export MAVEN_HOME=/usr/local/apache-maven-3.8.4
 export PATH=$MAVEN_HOME/bin:$PATH
 ```
@@ -371,7 +452,7 @@ export PATH=$MAVEN_HOME/bin:$PATH
 
 编辑`MAVEN_HOME/conf/setting.xml`文件找到`<mirrors>`节点，往里面添加配置代码
 
-```
+```xml
 <mirror>
         <id>alimaven</id>
         <name>aliyun maven</name>
@@ -413,9 +494,11 @@ export PATH=$MAVEN_HOME/bin:$PATH
 
 5、配置本地仓库
 
-```
+```xml
 <localRepository>/Users/chenjiaofu/Documents/apache-maven-3.8.4/maven-repo</localRepository>
 ```
+
+
 
 
 
@@ -427,7 +510,7 @@ export PATH=$MAVEN_HOME/bin:$PATH
 
 
 
-## 常用指令
+## GitHub常用指令
 
 ```
 git config --global --edit //全局打开配置文件
@@ -445,3 +528,34 @@ git branch -m br_rename_old br_rename_new //将本地仓库的br_rename_old的�
 
 
 # 平时遇到的BUG
+
+## Springboot项目打包失败
+
+![Springboot项目打包失败](image/Springboot项目打包失败.png)
+
+解决方法：
+
+​	在pom文件下的plugins下添加代码块
+
+```xml
+<plugin>
+    <groupId>org.apache.maven.plugins</groupId>
+    <artifactId>maven-resources-plugin</artifactId>
+    <version>2.4.3</version>
+</plugin>
+```
+
+# Mac系统下DNS污染
+
+```shell
+sudo killall -HUP mDNSResponder ##清除DNS缓存
+```
+
+
+
+# 常用指令
+
+```shell
+nohup java -jar epidemic-0.0.1-SNAPSHOT.jar >	 /dev/null 2>&1 &  ##Jar包后台启动指令
+
+```
