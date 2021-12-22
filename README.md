@@ -2,15 +2,15 @@
 
 ## 1、equals和hashcode
 
-​	hashcode 是通过散列方法进行计算获取唯一的hash值。在hashMap中将通过hash确认对象在桶的位置。即便是通过桶索引（bucketIndex）找到了对象也要调用一个或者多个equals方法去一个一个比较，成功了才属于真正的对象相等。因为一个桶里面只能装一个entry对象，但是entry对象是可以包含一个索引值去指向另一个entry，最终可以形成entry链；
+​		hashcode 是通过散列方法进行计算获取唯一的hash值。在hashMap中将通过hash确认对象在桶的位置。即便是通过桶索引(bucketIndex)找到了对象也要调用一个或者多个equals方法去一个一个比较，成功了才属于真正的对象相等。因为一个桶里面只能装一个entry对象，但是entry对象是可以包含一个索引值去指向另一个entry，最终可以形成entry链；
 
-​	equal是源于Object类，默认方法是去对比两个对象的引用，可以通过重写equal方法去自定义验证对象是否相等的新规则。
+​		equal是源于Object类，默认方法是去对比两个对象的引用，可以通过重写equal方法去自定义验证对象是否相等的新规则。
 
-[hashcode详解]: https://www.cnblogs.com/whgk/p/6071617.html
+> hashcode详解  https://www.cnblogs.com/whgk/p/6071617.html 
 
 
 
-## 2、StringBuffer、StringBuilder和String的区别
+## 2、StringBuffer、StringBuilder和String
 
 1）StringBuffer和StringBuilder初始化对象的时候是创建一个默认长度为16的char数组，修改都是针对char[]进行操作；String的底层是创建一个final 的char数组，他的操作是将引用对象指向新的对象。
 
@@ -18,7 +18,7 @@
 
 
 
-## 3、Java的重写和重载有什么区别
+## 3、Java的重写和重载
 
 1）重写是子类继承父类的方法进行重写，重载是同一个类下相同方法名，可以根据传参类型、传参个数的不同进行方法重载。
 
@@ -26,11 +26,11 @@
 
 ![重写与重载](image/重写与重载.png)
 
-## 4、谈一谈HashMap的扩容机制
+## 4、HashMap的扩容机制
 
-初始化HashMap时如果不传容量大小，默认16，加载因子为0.75；当容器容量乘上加载因子小于当前哈希条目时，进行扩容操作，每次扩容都是以2的指数倍进行扩容；
+​		初始化HashMap时如果不传容量大小，默认16，加载因子为0.75；当容器容量乘上加载因子小于当前哈希条目时，进行扩容操作，每次扩容都是以2的指数倍进行扩容；
 
-Java1.7在扩容时需要对每个元素进行rehash计算扩容后的hash地址，而1.8之后通过hash值和oldCap(旧容器大小)进行&位计算，得出新的hash地址；因为数组是以2的指数倍扩容，就相当于二进制中在多一个高位，如果高位是1，则将其调整到原索引加上oldCap的位置上，如果是0则无需调整。
+​		Java1.7在扩容时需要对每个元素进行rehash计算扩容后的hash地址，而1.8之后通过hash值和oldCap(旧容器大小)进行&位计算，得出新的hash地址；因为数组是以2的指数倍扩容，就相当于二进制中在多一个高位，如果高位是1，则将其调整到原索引加上oldCap的位置上，如果是0则无需调整。
 
 
 
@@ -42,11 +42,9 @@ Java1.7在扩容时需要对每个元素进行rehash计算扩容后的hash地址
 
 
 
-
-
 # Spring框架
 
-## 1、谈谈对Spring 的理解
+## 1、对Spring 的理解
 
 1）Spring是一个开源框架
 
@@ -58,9 +56,9 @@ Java1.7在扩容时需要对每个元素进行rehash计算扩容后的hash地址
 
 
 
-## 2、让我们谈一谈AOP的理解
+## 2、对AOP的理解
 
-AOP的意思是面向切面编程，任何一个系统都是由不同的组件组成的，每个组件负责一块特定的功能，当然会存在很多组件是跟业务无关的，例如日志、事务、权限等核心服务组件，这些核心服务组件经常融入到具体的业务逻辑中，如果我们为每一个具体业务逻辑操作都添加这样的代码，很明显代码冗余太多，因此我们需要将这些公共的代码逻辑抽象出来变成一个切面，然后注入到目标对象（具体业务）中去，AOP正是基于这样的一个思路实现的，通过动态代理的方式，将需要注入切面的对象进行代理，在进行调用的时候，将公共的逻辑直接添加进去，而不需要修改原有业务的逻辑代码，只需要在原来的业务逻辑基础之上做一些增强功能即可。
+​		AOP的意思是面向切面编程，任何一个系统都是由不同的组件组成的，每个组件负责一块特定的功能，当然会存在很多组件是跟业务无关的，例如日志、事务、权限等核心服务组件，这些核心服务组件经常融入到具体的业务逻辑中，如果我们为每一个具体业务逻辑操作都添加这样的代码，很明显代码冗余太多，因此我们需要将这些公共的代码逻辑抽象出来变成一个切面，然后注入到目标对象（具体业务）中去，AOP正是基于这样的一个思路实现的，通过动态代理的方式，将需要注入切面的对象进行代理，在进行调用的时候，将公共的逻辑直接添加进去，而不需要修改原有业务的逻辑代码，只需要在原来的业务逻辑基础之上做一些增强功能即可。
 
 ### proxy 
 
@@ -76,7 +74,7 @@ AOP的意思是面向切面编程，任何一个系统都是由不同的组件�
 
 
 
-## 3、让我们谈一谈对IOC的理解
+## 3、对IOC的理解
 
 ​	IOC（invest of controll） ，意思是控制反转，它是一种设计思想，并不是一种技术框架或者结构。在传统的创建对象中，是通过对象内部的new方法去实例一个对象，而IOC则是通过特定的容器去扫描注解，自动去创建依赖对象。
 
@@ -84,7 +82,7 @@ AOP的意思是面向切面编程，任何一个系统都是由不同的组件�
 
 ​	IOC容器降低了业务对象替换的复杂性，降低了对象间的耦合；
 
-## 4、BeanFactory和ApplicationContext有什么区别
+## 4、BeanFactory和ApplicationContext
 
 相同:
 
@@ -106,11 +104,16 @@ AOP的意思是面向切面编程，任何一个系统都是由不同的组件�
 6. 再基于metadataReader判断是不是对应的类是不是接口或抽象类
 7. 如果筛选通过，那么就表示扫描到了一个Bean，将ScannedGenericBeanDefinition加入结果集
 
-## 6、Spring启动流程原理
+## 6、Spring是如何简化开发的
+
+- 基于POJO的轻量级和最小侵入性编程
+- 通过依赖注入和面向接口实现松耦合
+- 基于切面和惯例进行声明式编程
+- 通过切面和模板减少样板式代码
 
 
 
-## 7、简述spring bean的生命周期？
+## 7、Spring bean的生命周期
 
 1）实例化（CreateBeanInstance）
 
@@ -118,8 +121,8 @@ AOP的意思是面向切面编程，任何一个系统都是由不同的组件�
 
 2）设置属性
 
-1. 用户自定义属性赋值（populateBean）
-2. 容器对象赋值（invokeAwareMethods）
+1. 用户自定义属性赋值/注入依赖，如果出现循环依赖，需要解决循环依赖（populateBean）
+2. 容器对象赋值/调用Aware接口（invokeAwareMethods）
 
 3）初始化 （Initialization）
 
@@ -137,23 +140,222 @@ AOP的意思是面向切面编程，任何一个系统都是由不同的组件�
 
 
 
-> 参考请别再问Spring Bean的生命周期了！
+> 请别再问**Spring Bean**的生命周期了！ https://www.jianshu.com/p/1dec08d290c1
 >
-> https://www.jianshu.com/p/1dec08d290c1
+> **Bean的生命周期**流程图  https://www.processon.com/view/61a80d96e401fd49ed415987
 
 
 
-## 8、BeanFactory和FactoryBean有什么区别？
+## 8、BeanFactory和FactoryBean
+
+1. BeanFactory是负责生产和管理Bean的一个工厂接口，它是最基础的IOC容器，为其他IOC容器提供了规范。
+2. FactoryBean是SpringIOC容器是创建Bean的一种方式，用户可以通过重写getObject()方法来自定义Bean的创建过程。
+
+
+
+## 9、Spring支持的Bean作用域
+
+① singleton(默认)
+
+​	使用该属性定义Bean时，IOC容器仅创建一个Bean实例，IOC容器每次返回的是同一个Bean实例。
+
+② prototype
+
+​	使用该属性定义Bean时，IOC容器可以创建多个Bean实例，每次返回的都是一个新的实例。
+
+③ request
+
+​	该属性仅对HTTP请求产生作用，使用该属性定义Bean时，每次HTTP请求都会创建一个新的Bean，适用于WebApplicationContext环境。
+
+④ session
+
+​	该属性仅用于HTTP Session，同一个Session共享一个Bean实例。不同Session使用不同的实例。
+
+⑤ global-session
+
+​	该属性仅用于HTTP Session，和session作用域不同的是，所有的Session共享一个Bean实例。
+
+
+
+## 10、Spring中Bean的线程安全
+
+Spring中bean对象的默认是单例的，Spring中没有对bean进行多线程的封装，所以面对多线程问题最直接的方式就是把作用域改为prototype，这样在每次调用bean都是创建新的对象避免线程安全问题。
+
+## 11、Spring框架中使用的设计模式及应用场景
+
+1. 工厂模式，在各种BeanFactory以及ApplicationContext创建中都用到了
+2. 模版模式，在各种BeanFactory以及ApplicationContext实现中也都用到了
+3. 代理模式，Spring AOP 利用了 AspectJ AOP实现的! AspectJ AOP 的底层用了动态代理
+4. 策略模式，加载资源文件的方式，使用了不同的方法，比如：ClassPathResourece，FileSystemResource，ServletContextResource，UrlResource但他们都有共同的借口Resource；在Aop的实现中，采用了两种不同的方式，JDK动态代理和CGLIB代理
+5. 单例模式，比如在创建bean的时候。
+6. 观察者模式，spring中的ApplicationEvent，ApplicationListener,ApplicationEventPublisher
+7. 适配器模式，MethodBeforeAdviceAdapter,ThrowsAdviceAdapter,AfterReturningAdapter
+8. 装饰者模式，源码中类型带Wrapper或者Decorator的都使用了
+
+
+
+## 12、Spring事务的实现方式原理
+
+​		Spring事务 的本质其实就是数据库对事务的支持，没有数据库的事务支持，Spring是无法提供事务功能的。
+
+​		在使用Spring框架的时候，可以有两种事务的实现方式，一种是编程式事务，有用户自己通过代码来控制事务的处理逻辑，还有一种是声明式事务，通过@Transactional注解来实现。
+
+​		其实事务的操作本来应该是由数据库来进行控制，但是为了方便用户进行业务逻辑的操作，spring对事务功能进行了扩展实现，一般我们很少会用编程式事务，更多的是通过添加@Transactional注解来进行实现，当添加此注解之后事务的自动功能就会关闭，有spring框架来帮助进行控制。
+
+​		其实事务操作是AOP的一个核心体现，当一个方法添加@Transactional注解之后，spring会基于这个类生成一个代理对象，会将这个代理对象作为bean，当使用这个代理对象的方法的时候，如果有事务处理，那么会先把事务的自动提交给关系，然后去执行具体的业务逻辑，如果执行逻辑没有出现异常，那么代理逻辑就会直接提交，如果出现任何异常情况，那么直接进行回滚操作，当然用户可以控制对哪些异常进行回滚操作。
+
+## 13、Spring事务的隔离级别
+
+spring中的事务隔离级别就是数据库的隔离级别，有以下几种：
+
+- read uncommitted （未提交读）      脏读、幻读、不可重复读
+- read committed      （已提交读）      幻读、不可重复读
+- repeatable read     （可重复读）       幻读
+- serializable             （可序列化）       效率较低
+
+在进行配置的时候，如果数据库和spring代码中的隔离级别不同，那么以spring的配置为主。
+
+## 14、Spring的事务传播机制
+
+
+
+## 15、Spring事务失效问题
+
+
+
+## 16、Spring中bean的自动装配的方式
+
+
+
+## 17、对SpringBoot的理解
+
+
+
+## 18、SpringBoot启动流程原理
+
+
+
+## 19、对SpringBoot中starter的理解
+
+
+
+## 20、对SpringMVC的理解
+
+
+
+## 21、SpringMVC的工作流程
+
+
+
+## 22、SpringMVC的九大组件
+
+
+
+
+
+# 设计模式
+
+## 设计模式七大原则
+
+### 单一职责原则(Single responsibility principle)
+
+​		对类来说，一个类只负责一个职责；如果一个类有两个职责A和B，当A职责的需求改变是可能造成B职责的代码执行错误，那么就需要将A的代码块分为两部分，所以不如一开始就将类的职责统一；
+
+### 接口隔离原则(Interface Segregation Principle)
+
+​		客户端不应该依赖(实现)它不需要的接口，即一个类对另一个类的依赖(实现)应该建立在最小的接口上，即将接口尽可能按需拆分为最小接口。
+
+### 依赖倒转原则(Dependence Inversion Principle)
+
+​		高层模块不应该依赖(实现)低层模块的代码，二者都应该依赖其接口/抽象类。  
+
+### 里氏替换原则(Liskov Substitution Principle)
+
+1. 所有引用到父类的地方都能使用子类（使用子类中父类方法结果不变）
+2. 在子类中尽量不要重写父类的方法
+3. 在适当情况下，可以通过聚合、组合、依赖来解决问题
+
+### 开闭原则(**Open Close Principle**)
+
+​		开闭原则就是说对**提供方**提供扩展开放，对**接收方**修改关闭。用抽象构建框架，用实现扩展细节；
+
+​		大致意思就是，**接受方**使用了**提供方**提供的方法B，而**提供方**将方法B进行了扩展，**接收方**继续调用方法B时并不需要修改代码，程序依旧正常执行；
+
+### 迪米特法原则(Demeter Principle)
+
+
+
+### 合成服用原则(Composite Reuse Principle)
+
+
+
+## 行为型模式
+
+### 访问者模式
+
+### 模板模式
+
+### 策略模式
+
+### 状态模式
+
+### 观察者模式
+
+### 备忘录模式
+
+### 中介者模式
+
+### 迭代器模式
+
+### 解释器模式
+
+### 命令模式
+
+### 责任链模式
+
+## 创建型模式
+
+### 单例模式
+
+### 工厂方法模式
+
+### 抽象工厂模式
+
+### 建造者模式
+
+### 原型模式
+
+## 结构型模式
+
+### 适配器模式
+
+### 桥接模式
+
+### 组合模式
+
+### 装饰模式
+
+### 外观模式
+
+### 亨元模式
+
+### 代理模式
+
+
+
+> Java之美[从菜鸟到高手演变]之设计模式   https://blog.csdn.net/zhangerqing/article/details/8194653
 
 
 
 # Mybatis
 
+
+
 # JVM
 
 ## 1、结构概览
 
-class文件 -> 类加载器 -> 运行时数据区（Java栈、本地方法栈、方法区、堆、程序计数器）-> 执行引擎（windows、linux、mac）->本地方法接口（native方法）<- 本地方法库
+​	class文件 -> 类加载器 -> 运行时数据区（Java栈、本地方法栈、方法区、堆、程序计数器）-> 执行引擎（windows、linux、mac）->本地方法接口（native方法）<- 本地方法库
 
 ![JVM体系结构概览](image/JVM体系结构概览.png)
 
@@ -506,7 +708,7 @@ export PATH=$MAVEN_HOME/bin:$PATH
 
 ## MAC系统下绑定github,ssh key
 
- 参考文章 https://www.jianshu.com/p/f008d9fe3f34/
+参考文章 https://www.jianshu.com/p/f008d9fe3f34/
 
 
 
@@ -545,7 +747,7 @@ git branch -m br_rename_old br_rename_new //将本地仓库的br_rename_old的�
 </plugin>
 ```
 
-# Mac系统下DNS污染
+## Mac系统下DNS污染
 
 ```shell
 sudo killall -HUP mDNSResponder ##清除DNS缓存
@@ -557,5 +759,4 @@ sudo killall -HUP mDNSResponder ##清除DNS缓存
 
 ```shell
 nohup java -jar epidemic-0.0.1-SNAPSHOT.jar >	 /dev/null 2>&1 &  ##Jar包后台启动指令
-
 ```
