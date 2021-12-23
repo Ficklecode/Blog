@@ -80,7 +80,21 @@
 
 ​	正转的意思是通过对象主动控制去直接获取依赖对象，而反转则是通过容器来帮忙创建和注入依赖对象。
 
-​	IOC容器降低了业务对象替换的复杂性，降低了对象间的耦合；
+​	IOC容器使用map结构来存储，在Spring中一般存在三级缓存，singletonObjects存放完整的bean对象，整个生命周期中，从创建到使用到销毁的过程都是由IOC容器来控制的。
+
+### IOC底层逻辑
+
+1.  容器创建过程设计的关键类（beanFactory，DefaultListableBeanFactory），向Bean工厂中设置参数涉及的关键类（BeanPostProcessor，Aware接口的子类）。
+2. 加载解析bean对象，准备要创建的bean对象的定义对象beanDefintion（xml或者注解的解析过程）
+3. beanFactoryPostProcessor的处理，此处是扩展点，PlaceHolderConfigurSupport，ConfigurationClassPostProcessor
+4. BeanPostProcessor的注册功能，方便后续对bean对象完成具体的扩展功能（占位符的扩展）
+5. BeanPostProcessor通过反射的方式实例化bean对象
+6. bean对象的初始化过程（填充属性、调用aware子类的方法，调用BeanPostProcessor前置处理方法、调用init-method、调用BeanPostProcessor后置处理方法）
+7. bean销毁过程
+
+Bean生命周期流程中调用的关键方法：
+
+getBean->doGetBean->createBean->doCreateBean->createBeanInstantce->populateBean->initializingBEan
 
 ## 4、BeanFactory和ApplicationContext
 
@@ -117,26 +131,26 @@
 
 1）实例化（CreateBeanInstance）
 
-​	在Java堆内存开辟空间，属性存放默认值
+​	在Java堆内存开辟空间，通过反射的方式生成对象
 
 2）设置属性
 
-1. 用户自定义属性赋值/注入依赖，如果出现循环依赖，需要解决循环依赖（populateBean）
-2. 容器对象赋值/调用Aware接口（invokeAwareMethods）
+1. 用户自定义属性赋值/注入依赖，如果出现循环依赖，需要解决循环依赖（populateBean()）
+2. 容器对象赋值/调用Aware接口（invokeAwareMethods），完成BeanName，BeanFactroy，BeanClassLoader对象的属性设置
 
 3）初始化 （Initialization）
 
-1. 调用BeanPostProccessor的前置接口-postProcessBeforeInitialization()
-2. 判断当前bean对象是否设置了InitializingBean接口，然后进行属性的设置等基本工作
-3. 如果当前bean对象定义了初始化方法，那么在此处调用初始化方法
-4. 调用BeanPostProccessor的后置接口-postProcessAfterInitialization()
+1. 调用BeanPostProccessor的前置接口 postProcessBeforeInitialization() （ApplicationContextPostProcessor、ApplicationContext、Environment、ResourceLoader等对象）
+2. InvokeInitMethod(),判断当前bean对象是否设置了InitializingBean接口，然后进行属性的设置等基本工作
+3. 如果当前bean对象定义了初始化方法(afterPropertiesSet)，那么在此处调用初始化方法
+4. 调用BeanPostProccessor的后置接口-postProcessAfterInitialization(), Spring中的Aop就是在这实现的(AbstractAutoProxyCreator)
 
-4）调用对象
+4）调用对象(getBean)
 
 5）销毁（Destruction）
 
 1. DisposableBean的destory()方法
-2. 自定义的destory-method指定方法
+2. 自定义的destoryMethod指定方法
 
 
 
@@ -196,7 +210,7 @@ Spring中bean对象的默认是单例的，Spring中没有对bean进行多线程
 
 ## 12、Spring事务的实现方式原理
 
-​		Spring事务 的本质其实就是数据库对事务的支持，没有数据库的事务支持，Spring是无法提供事务功能的。
+​		Spring事务的本质其实就是数据库对事务的支持，没有数据库的事务支持，Spring是无法提供事务功能的。
 
 ​		在使用Spring框架的时候，可以有两种事务的实现方式，一种是编程式事务，有用户自己通过代码来控制事务的处理逻辑，还有一种是声明式事务，通过@Transactional注解来实现。
 
@@ -217,13 +231,52 @@ spring中的事务隔离级别就是数据库的隔离级别，有以下几种�
 
 ## 14、Spring的事务传播机制
 
+多个事务方法相互调用时，事务如何在这些方法之间进行传播,spring中提供了7中不同的传播特性，来保证事务的正常执行：
 
+​		REQUIRED：默认的传播特性，如果当前没有事务，则新建一个事务，如果当前存在事务，则加入这个事务
+
+​		SUPPORTS：当前存在事务，则加入当前事务，如果当前没有事务，则以非事务的方式执行
+
+​		MANDATORY：当前存在事务，则加入当前事务，如果当前事务不存在，则抛出异常
+
+​		REQUIRED_NEW：创建新事务，无论当前存不存在事务，都创建新事务。
+
+​		NOT_SUPPORTED：以非事务方式执行，如果存在当前事务，则挂起当前事务
+
+​		NEVER：不使用事务，如果当前事务存在，则抛出异常
+
+​		NESTED：如果当前存在事务，则在嵌套事务内执行。如果当前没有事务，则按REQUIRED属性执行。
+
+​		NESTED和REQUIRED_NEW的区别：
+
+​		REQUIRED_NEW是新建一个事务并且新开始的这个事务与原有事务无关，而NESTED则是当前存在事务时会开启一个嵌套事务，在NESTED情况下，父事务回滚时，子事务也会回滚，而REQUIRED_NEW情况下，原有事务回滚，不会影响新开启的事务
+
+​		NESTED和REQUIRED的区别：
+
+​		REQUIRED情况下，调用方存在事务时，则被调用方和调用方使用同一个事务，那么被调用方出现异常时，由于共用一个事务，所以无论是否catch异常，事务都会回滚，而在NESTED情况下，被调用方发生异常时，调用方可以catch其异常，这样只有子事务回滚，父事务不会回滚。
 
 ## 15、Spring事务失效问题
+
+1. bean对象没有被spring容器管理
+2. 方法的访问修饰符不是public
+3. 自身调用问题
+4. 数据源没有配置事务管理器
+5. 数据库不支持事务
+6. 异常被捕获
+7. 异常类型错误或者配置错误
 
 
 
 ## 16、Spring中bean的自动装配的方式
+
+bean的自动装配指的是bean的属性值在进行注入的时候通过某种特定的规则和方式去容器中查找，并设置到具体的对象属性中，主要有五种方式：
+
+- no – 缺省情况下，自动配置是通过“ref”属性手动设定，在项目中最常用
+- byName – 根据属性名称自动装配。如果一个bean的名称和其他bean属性的名称是一样的，将会自装配它。
+- byType – 按数据类型自动装配，如果bean的数据类型是用其它bean属性的数据类型，兼容并自动装配它。
+- constructor – 在构造函数参数的byType方式。
+- autodetect – 如果找到默认的构造函数，使用“自动装配用构造”; 否则，使用“按类型自动装配”。
+
 
 
 
@@ -231,7 +284,11 @@ spring中的事务隔离级别就是数据库的隔离级别，有以下几种�
 
 
 
+
+
 ## 18、SpringBoot启动流程原理
+
+
 
 
 
@@ -239,17 +296,60 @@ spring中的事务隔离级别就是数据库的隔离级别，有以下几种�
 
 
 
-## 20、对SpringMVC的理解
+## 20、Spring自动装配原理
 
 
 
-## 21、SpringMVC的工作流程
+## 21、对SpringMVC的理解
 
 
 
-## 22、SpringMVC的九大组件
+## 22、SpringMVC的工作流程
 
+当发起请求时被前置的控制器拦截到请求，根据请求参数生成代理请求，找到请求对应的实际控制器，控制器处理请求，创建数据模型，访问数据库，将模型响应给中心控制器，控制器使用模型与视图渲染视图结果，将结果返回给中心控制器，再将结果返回给请求者。
 
+![springmvc运行流程](image/springmvc运行流程.png)
+
+1、DispatcherServlet表示前置控制器，是整个SpringMVC的控制中心。用户发出请求，DispatcherServlet接收请求并拦截请求。
+2、HandlerMapping为处理器映射。DispatcherServlet调用HandlerMapping,HandlerMapping根据请求url查找Handler。
+3、返回处理器执行链，根据url查找控制器，并且将解析后的信息传递给DispatcherServlet
+4、HandlerAdapter表示处理器适配器，其按照特定的规则去执行Handler。
+5、执行handler找到具体的处理器
+6、Controller将具体的执行信息返回给HandlerAdapter,如ModelAndView。
+7、HandlerAdapter将视图逻辑名或模型传递给DispatcherServlet。
+8、DispatcherServlet调用视图解析器(ViewResolver)来解析HandlerAdapter传递的逻辑视图名。
+9、视图解析器将解析的逻辑视图名传给DispatcherServlet。
+10、DispatcherServlet根据视图解析器解析的视图结果，调用具体的视图，进行试图渲染
+11、将响应数据返回给客户端
+
+## 23、SpringMVC的九大组件
+
+1.HandlerMapping
+根据request找到相应的处理器。因为Handler（Controller）有两种形式，一种是基于类的Handler，另一种是基于Method的Handler（也就是我们常用的）
+
+2.HandlerAdapter
+调用Handler的适配器。如果把Handler（Controller）当做工具的话，那么HandlerAdapter就相当于干活的工人
+
+3.HandlerExceptionResolver
+对异常的处理
+
+4.ViewResolver
+用来将String类型的视图名和Locale解析为View类型的视图
+
+5.RequestToViewNameTranslator
+有的Handler（Controller）处理完后没有设置返回类型，比如是void方法，这是就需要从request中获取viewName
+
+6.LocaleResolver
+从request中解析出Locale。Locale表示一个区域，比如zh-cn，对不同的区域的用户，显示不同的结果，这就是i18n（SpringMVC中有具体的拦截器LocaleChangeInterceptor）
+
+7.ThemeResolver
+主题解析，这种类似于我们手机更换主题，不同的UI，css等
+
+8.MultipartResolver
+处理上传请求，将普通的request封装成MultipartHttpServletRequest
+
+9.FlashMapManager
+用于管理FlashMap，FlashMap用于在redirect重定向中传递参数
 
 
 
