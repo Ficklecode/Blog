@@ -1,16 +1,16 @@
 # Java基础
 
-## 1、equals和hashcode
+## equals和hashcode
 
-​		hashcode 是通过散列方法进行计算获取唯一的hash值。在hashMap中将通过hash确认对象在桶的位置。即便是通过桶索引(bucketIndex)找到了对象也要调用一个或者多个equals方法去一个一个比较，成功了才属于真正的对象相等。因为一个桶里面只能装一个entry对象，但是entry对象是可以包含一个索引值去指向另一个entry，最终可以形成entry链；
+​	hashcode 是通过散列方法进行计算获取唯一的hash值。在hashMap中将通过hash确认对象在桶的位置。即便是通过桶索引(bucketIndex)找到了对象也要调用一个或者多个equals方法去一个一个比较，成功了才属于真正的对象相等。因为一个桶里面只能装一个entry对象，但是entry对象是可以包含一个索引值去指向另一个entry，最终可以形成entry链；
 
-​		equal是源于Object类，默认方法是去对比两个对象的引用，可以通过重写equal方法去自定义验证对象是否相等的新规则。
+​	equal是源于Object类，默认方法是去对比两个对象的引用，可以通过重写equal方法去自定义验证对象是否相等的新规则。
 
 > hashcode详解  https://www.cnblogs.com/whgk/p/6071617.html 
 
 
 
-## 2、StringBuffer、StringBuilder和String
+## StringBuffer、StringBuilder和String
 
 1）StringBuffer和StringBuilder初始化对象的时候是创建一个默认长度为16的char数组，修改都是针对char[]进行操作；String的底层是创建一个final 的char数组，他的操作是将引用对象指向新的对象。
 
@@ -18,7 +18,7 @@
 
 
 
-## 3、Java的重写和重载
+## Java的重写和重载
 
 1）重写是子类继承父类的方法进行重写，重载是同一个类下相同方法名，可以根据传参类型、传参个数的不同进行方法重载。
 
@@ -26,15 +26,15 @@
 
 ![重写与重载](image/重写与重载.png)
 
-## 4、HashMap的扩容机制
+## HashMap的扩容机制
 
-​		初始化HashMap时如果不传容量大小，默认16，加载因子为0.75；当容器容量乘上加载因子小于当前哈希条目时，进行扩容操作，每次扩容都是以2的指数倍进行扩容；
+​	初始化HashMap时如果不传容量大小，默认16，加载因子为0.75；当容器容量乘上加载因子小于当前哈希条目时，进行扩容操作，每次扩容都是以2的指数倍进行扩容；
 
-​		Java1.7在扩容时需要对每个元素进行rehash计算扩容后的hash地址，而1.8之后通过hash值和oldCap(旧容器大小)进行&位计算，得出新的hash地址；因为数组是以2的指数倍扩容，就相当于二进制中在多一个高位，如果高位是1，则将其调整到原索引加上oldCap的位置上，如果是0则无需调整。
+​	Java1.7在扩容时需要对每个元素进行rehash计算扩容后的hash地址，而1.8之后通过hash值和oldCap(旧容器大小)进行&位计算，得出新的hash地址；因为数组是以2的指数倍扩容，就相当于二进制中在多一个高位，如果高位是1，则将其调整到原索引加上oldCap的位置上，如果是0则无需调整。
 
 
 
-## 5、为什么HashMap扩容的时候是二的指数倍
+## 为什么HashMap扩容的时候是二的指数倍
 
 1）因为在二进制中2的指数减去1，这个结果n的二进制全部为1，再拿n去与hash值进行&位运算可以充分的散列，避免必要的hash冲突。
 
@@ -44,7 +44,7 @@
 
 # Spring框架
 
-## 1、对Spring 的理解
+## 对Spring 的理解
 
 1）Spring是一个开源框架
 
@@ -56,7 +56,7 @@
 
 
 
-## 2、对AOP的理解
+## 对AOP的理解
 
 ​		AOP的意思是面向切面编程，任何一个系统都是由不同的组件组成的，每个组件负责一块特定的功能，当然会存在很多组件是跟业务无关的，例如日志、事务、权限等核心服务组件，这些核心服务组件经常融入到具体的业务逻辑中，如果我们为每一个具体业务逻辑操作都添加这样的代码，很明显代码冗余太多，因此我们需要将这些公共的代码逻辑抽象出来变成一个切面，然后注入到目标对象（具体业务）中去，AOP正是基于这样的一个思路实现的，通过动态代理的方式，将需要注入切面的对象进行代理，在进行调用的时候，将公共的逻辑直接添加进去，而不需要修改原有业务的逻辑代码，只需要在原来的业务逻辑基础之上做一些增强功能即可。
 
@@ -74,7 +74,7 @@
 
 
 
-## 3、对IOC的理解
+## 对IOC的理解
 
 ​	IOC（invest of controll） ，意思是控制反转，它是一种设计思想，并不是一种技术框架或者结构。在传统的创建对象中，是通过对象内部的new方法去实例一个对象，而IOC则是通过特定的容器去扫描注解，自动去创建依赖对象。
 
@@ -96,7 +96,7 @@ Bean生命周期流程中调用的关键方法：
 
 getBean->doGetBean->createBean->doCreateBean->createBeanInstantce->populateBean->initializingBEan
 
-## 4、BeanFactory和ApplicationContext
+## BeanFactory和ApplicationContext
 
 相同:
 
@@ -108,7 +108,7 @@ getBean->doGetBean->createBean->doCreateBean->createBeanInstantce->populateBean-
 - BeanFactory在调用getBean()的时候才实例化Bean（懒加载），而ApplicationContext是在启动容器的时候实例化Bean（非懒加载）。
 - 因为ApplicationContext是BeanFactory的扩展，提供了更多的功能:支持国际化、事件传递、Bean自动装配、各种不同应用层的Context实现。
 
-## 5、Spring扫描底层的原理
+## Spring扫描底层的原理
 
 1. 首先，通过ResourcePatternResolver获得指定包路径下的所有 .class 文件（Spring源码中将此文件包装成了Resource对象)
 2. 遍历每个Resource对象
@@ -118,7 +118,7 @@ getBean->doGetBean->createBean->doCreateBean->createBeanInstantce->populateBean-
 6. 再基于metadataReader判断是不是对应的类是不是接口或抽象类
 7. 如果筛选通过，那么就表示扫描到了一个Bean，将ScannedGenericBeanDefinition加入结果集
 
-## 6、Spring是如何简化开发的
+## Spring是如何简化开发的
 
 - 基于POJO的轻量级和最小侵入性编程
 - 通过依赖注入和面向接口实现松耦合
@@ -127,7 +127,7 @@ getBean->doGetBean->createBean->doCreateBean->createBeanInstantce->populateBean-
 
 
 
-## 7、Spring bean的生命周期
+## Spring bean的生命周期
 
 1）实例化（CreateBeanInstance）
 
@@ -160,14 +160,14 @@ getBean->doGetBean->createBean->doCreateBean->createBeanInstantce->populateBean-
 
 
 
-## 8、BeanFactory和FactoryBean
+## BeanFactory和FactoryBean
 
 1. BeanFactory是负责生产和管理Bean的一个工厂接口，它是最基础的IOC容器，为其他IOC容器提供了规范。
 2. FactoryBean是SpringIOC容器是创建Bean的一种方式，用户可以通过重写getObject()方法来自定义Bean的创建过程。
 
 
 
-## 9、Spring支持的Bean作用域
+## Spring支持的Bean作用域
 
 ① singleton(默认)
 
@@ -191,11 +191,11 @@ getBean->doGetBean->createBean->doCreateBean->createBeanInstantce->populateBean-
 
 
 
-## 10、Spring中Bean的线程安全
+## Spring中Bean的线程安全
 
 Spring中bean对象的默认是单例的，Spring中没有对bean进行多线程的封装，所以面对多线程问题最直接的方式就是把作用域改为prototype，这样在每次调用bean都是创建新的对象避免线程安全问题。
 
-## 11、Spring框架中使用的设计模式及应用场景
+## Spring框架中使用的设计模式及应用场景
 
 1. 工厂模式，在各种BeanFactory以及ApplicationContext创建中都用到了
 2. 模版模式，在各种BeanFactory以及ApplicationContext实现中也都用到了
@@ -208,17 +208,17 @@ Spring中bean对象的默认是单例的，Spring中没有对bean进行多线程
 
 
 
-## 12、Spring事务的实现方式原理
+## Spring事务的实现方式原理
 
-​		Spring事务的本质其实就是数据库对事务的支持，没有数据库的事务支持，Spring是无法提供事务功能的。
+​	Spring事务的本质其实就是数据库对事务的支持，没有数据库的事务支持，Spring是无法提供事务功能的。
 
-​		在使用Spring框架的时候，可以有两种事务的实现方式，一种是编程式事务，有用户自己通过代码来控制事务的处理逻辑，还有一种是声明式事务，通过@Transactional注解来实现。
+​	在使用Spring框架的时候，可以有两种事务的实现方式，一种是编程式事务，有用户自己通过代码来控制事务的处理逻辑，还有一种是声明式事务，通过@Transactional注解来实现。
 
-​		其实事务的操作本来应该是由数据库来进行控制，但是为了方便用户进行业务逻辑的操作，spring对事务功能进行了扩展实现，一般我们很少会用编程式事务，更多的是通过添加@Transactional注解来进行实现，当添加此注解之后事务的自动功能就会关闭，有spring框架来帮助进行控制。
+​	其实事务的操作本来应该是由数据库来进行控制，但是为了方便用户进行业务逻辑的操作，spring对事务功能进行了扩展实现，一般我们很少会用编程式事务，更多的是通过添加@Transactional注解来进行实现，当添加此注解之后事务的自动功能就会关闭，有spring框架来帮助进行控制。
 
-​		其实事务操作是AOP的一个核心体现，当一个方法添加@Transactional注解之后，spring会基于这个类生成一个代理对象，会将这个代理对象作为bean，当使用这个代理对象的方法的时候，如果有事务处理，那么会先把事务的自动提交给关系，然后去执行具体的业务逻辑，如果执行逻辑没有出现异常，那么代理逻辑就会直接提交，如果出现任何异常情况，那么直接进行回滚操作，当然用户可以控制对哪些异常进行回滚操作。
+​	其实事务操作是AOP的一个核心体现，当一个方法添加@Transactional注解之后，spring会基于这个类生成一个代理对象，会将这个代理对象作为bean，当使用这个代理对象的方法的时候，如果有事务处理，那么会先把事务的自动提交给关系，然后去执行具体的业务逻辑，如果执行逻辑没有出现异常，那么代理逻辑就会直接提交，如果出现任何异常情况，那么直接进行回滚操作，当然用户可以控制对哪些异常进行回滚操作。
 
-## 13、Spring事务的隔离级别
+## Spring事务的隔离级别
 
 spring中的事务隔离级别就是数据库的隔离级别，有以下几种：
 
@@ -229,33 +229,33 @@ spring中的事务隔离级别就是数据库的隔离级别，有以下几种�
 
 在进行配置的时候，如果数据库和spring代码中的隔离级别不同，那么以spring的配置为主。
 
-## 14、Spring的事务传播机制
+## Spring的事务传播机制
 
 多个事务方法相互调用时，事务如何在这些方法之间进行传播,spring中提供了7中不同的传播特性，来保证事务的正常执行：
 
-​		REQUIRED：默认的传播特性，如果当前没有事务，则新建一个事务，如果当前存在事务，则加入这个事务
+​	REQUIRED：默认的传播特性，如果当前没有事务，则新建一个事务，如果当前存在事务，则加入这个事务
 
-​		SUPPORTS：当前存在事务，则加入当前事务，如果当前没有事务，则以非事务的方式执行
+​	SUPPORTS：当前存在事务，则加入当前事务，如果当前没有事务，则以非事务的方式执行
 
-​		MANDATORY：当前存在事务，则加入当前事务，如果当前事务不存在，则抛出异常
+​	MANDATORY：当前存在事务，则加入当前事务，如果当前事务不存在，则抛出异常
 
-​		REQUIRED_NEW：创建新事务，无论当前存不存在事务，都创建新事务。
+​	REQUIRED_NEW：创建新事务，无论当前存不存在事务，都创建新事务。
 
-​		NOT_SUPPORTED：以非事务方式执行，如果存在当前事务，则挂起当前事务
+​	NOT_SUPPORTED：以非事务方式执行，如果存在当前事务，则挂起当前事务
 
-​		NEVER：不使用事务，如果当前事务存在，则抛出异常
+​	NEVER：不使用事务，如果当前事务存在，则抛出异常
 
-​		NESTED：如果当前存在事务，则在嵌套事务内执行。如果当前没有事务，则按REQUIRED属性执行。
+​	NESTED：如果当前存在事务，则在嵌套事务内执行。如果当前没有事务，则按REQUIRED属性执行。
 
-​		NESTED和REQUIRED_NEW的区别：
+​	NESTED和REQUIRED_NEW的区别：
 
-​		REQUIRED_NEW是新建一个事务并且新开始的这个事务与原有事务无关，而NESTED则是当前存在事务时会开启一个嵌套事务，在NESTED情况下，父事务回滚时，子事务也会回滚，而REQUIRED_NEW情况下，原有事务回滚，不会影响新开启的事务
+​	REQUIRED_NEW是新建一个事务并且新开始的这个事务与原有事务无关，而NESTED则是当前存在事务时会开启一个嵌套事务，在NESTED情况下，父事务回滚时，子事务也会回滚，而REQUIRED_NEW情况下，原有事务回滚，不会影响新开启的事务
 
-​		NESTED和REQUIRED的区别：
+​	NESTED和REQUIRED的区别：
 
-​		REQUIRED情况下，调用方存在事务时，则被调用方和调用方使用同一个事务，那么被调用方出现异常时，由于共用一个事务，所以无论是否catch异常，事务都会回滚，而在NESTED情况下，被调用方发生异常时，调用方可以catch其异常，这样只有子事务回滚，父事务不会回滚。
+​	REQUIRED情况下，调用方存在事务时，则被调用方和调用方使用同一个事务，那么被调用方出现异常时，由于共用一个事务，所以无论是否catch异常，事务都会回滚，而在NESTED情况下，被调用方发生异常时，调用方可以catch其异常，这样只有子事务回滚，父事务不会回滚。
 
-## 15、Spring事务失效问题
+## Spring事务失效问题
 
 1. bean对象没有被spring容器管理
 2. 方法的访问修饰符不是public
@@ -267,7 +267,7 @@ spring中的事务隔离级别就是数据库的隔离级别，有以下几种�
 
 
 
-## 16、Spring中bean的自动装配的方式
+## Spring中bean的自动装配的方式
 
 bean的自动装配指的是bean的属性值在进行注入的时候通过某种特定的规则和方式去容器中查找，并设置到具体的对象属性中，主要有五种方式：
 
@@ -280,31 +280,42 @@ bean的自动装配指的是bean的属性值在进行注入的时候通过某种
 
 
 
-## 17、对SpringBoot的理解
+## 对SpringBoot的理解
 
 
 
 
 
-## 18、SpringBoot启动流程原理
+## SpringBoot启动流程原理
 
 
 
 
 
-## 19、对SpringBoot中starter的理解
+## 对SpringBoot中starter的理解
+
+​	使用Spring+SpringMVC框架进行开发的时候，如果需要引入mybatis框架，那么需要在xml中定义需要的bean对象，这个过程很明显是很麻烦的，如果需要引入额外的其他组件，那么也需要进行复杂的配置，因此在SpringBoot中引入了Starter
+
+​	Starter就是一个jar包，写一个@Configuration的配置类，将这些bean定义在其中，然后再Starter包的META-INF/spring.factories中写入配置类，那么SpringBoot程序在启动的时候就会按照约定来加载该配置类
+
+​	开发人员只需要将相应的Starter包依赖进应用中，进行相关的属性配置，就可以进行代码开发，而不需要单独进行bean对象的配置
+
+## bean的自动装配
+
+​	bean的自动装配指的是bean的属性值在进行注入的时候通过某种特定的规则和方式去容器中查找，并设置到具体的对象属性中，主要有五种方式：
+
+- no – 缺省情况下，自动配置是通过“ref”属性手动设定，在项目中最常用
+- byName – 根据属性名称自动装配。如果一个bean的名称和其他bean属性的名称是一样的，将会自装配它。
+- byType – 按数据类型自动装配，如果bean的数据类型是用其它bean属性的数据类型，兼容并自动装配它。
+- constructor – 在构造函数参数的byType方式。
+- autodetect – 如果找到默认的构造函数，使用“自动装配用构造”; 否则，使用“按类型自动装配”。
+  ​		
+
+## 对SpringMVC的理解
 
 
 
-## 20、Spring自动装配原理
-
-
-
-## 21、对SpringMVC的理解
-
-
-
-## 22、SpringMVC的工作流程
+## SpringMVC的工作流程
 
 当发起请求时被前置的控制器拦截到请求，根据请求参数生成代理请求，找到请求对应的实际控制器，控制器处理请求，创建数据模型，访问数据库，将模型响应给中心控制器，控制器使用模型与视图渲染视图结果，将结果返回给中心控制器，再将结果返回给请求者。
 
@@ -322,7 +333,7 @@ bean的自动装配指的是bean的属性值在进行注入的时候通过某种
 10、DispatcherServlet根据视图解析器解析的视图结果，调用具体的视图，进行试图渲染
 11、将响应数据返回给客户端
 
-## 23、SpringMVC的九大组件
+## SpringMVC的九大组件
 
 1.HandlerMapping
 根据request找到相应的处理器。因为Handler（Controller）有两种形式，一种是基于类的Handler，另一种是基于Method的Handler（也就是我们常用的）
@@ -359,15 +370,15 @@ bean的自动装配指的是bean的属性值在进行注入的时候通过某种
 
 ### 单一职责原则(Single responsibility principle)
 
-​		对类来说，一个类只负责一个职责；如果一个类有两个职责A和B，当A职责的需求改变是可能造成B职责的代码执行错误，那么就需要将A的代码块分为两部分，所以不如一开始就将类的职责统一；
+​	对类来说，一个类只负责一个职责；如果一个类有两个职责A和B，当A职责的需求改变是可能造成B职责的代码执行错误，那么就需要将A的代码块分为两部分，所以不如一开始就将类的职责统一；
 
 ### 接口隔离原则(Interface Segregation Principle)
 
-​		客户端不应该依赖(实现)它不需要的接口，即一个类对另一个类的依赖(实现)应该建立在最小的接口上，即将接口尽可能按需拆分为最小接口。
+​	客户端不应该依赖(实现)它不需要的接口，即一个类对另一个类的依赖(实现)应该建立在最小的接口上，即将接口尽可能按需拆分为最小接口。
 
 ### 依赖倒转原则(Dependence Inversion Principle)
 
-​		高层模块不应该依赖(实现)低层模块的代码，二者都应该依赖其接口/抽象类。  
+​	高层模块不应该依赖(实现)低层模块的代码，二者都应该依赖其接口/抽象类。  
 
 ### 里氏替换原则(Liskov Substitution Principle)
 
@@ -377,15 +388,19 @@ bean的自动装配指的是bean的属性值在进行注入的时候通过某种
 
 ### 开闭原则(**Open Close Principle**)
 
-​		开闭原则就是说对**提供方**提供扩展开放，对**接收方**修改关闭。用抽象构建框架，用实现扩展细节；
+​	开闭原则就是说对**提供方**提供扩展开放，对**接收方**修改关闭。用抽象构建框架，用实现扩展细节；
 
-​		大致意思就是，**接受方**使用了**提供方**提供的方法B，而**提供方**将方法B进行了扩展，**接收方**继续调用方法B时并不需要修改代码，程序依旧正常执行；
+​	大致意思就是，**接受方**使用了**提供方**提供的方法B，而**提供方**将方法B进行了扩展，**接收方**继续调用方法B时并不需要修改代码，程序依旧正常执行；
 
-### 迪米特法原则(Demeter Principle)
+### 迪米特法则(Demeter Principle)
 
+迪米特法则又叫最少知道原则，即一个类对自己依赖的类知道的越少越好。也就是说，对于被依赖的类不管多么复杂，都尽量将逻辑封装在类的内部。对外除了提供public方法，不对外泄漏任何信息。
 
+陌生的类最好不要以局部变量的形式出现在类的内部。	
 
 ### 合成服用原则(Composite Reuse Principle)
+
+原则是尽量使用合成/聚合的方式，而不是使用继承。
 
 
 
@@ -417,7 +432,243 @@ bean的自动装配指的是bean的属性值在进行注入的时候通过某种
 
 ### 单例模式
 
+所谓类的单例设计模式，就是采用一定的方法保证在整个的软件系统中，对某个类只能存在一个对象实例，并且该类只提供一个获取该实例的方法(静态方法)。
+
+单例模式保证了系统内部中该类只存在一个对象，节省了系统资源，对于一些需要频繁创建销毁的对象，使用单例模式可以提高系统性能。
+
+------
+
+**单例设计模式八种方式：**
+
+**1、饿汉式(静态常量)**
+
+```java
+public class Singleton {
+
+    //构造器私有化，防止外部new
+    private  Singleton() {
+    }
+
+    //本类内部创建对象实例
+    private final static Singleton instantce = new Singleton();
+
+    //提供一个公有静态方法，返回实例对象
+    public static Singleton getInstance() {
+        return instantce;
+    }
+}
+
+```
+
+优点：在类加载的时候就完成了实例化，避免了线程同步问题。
+
+缺点：在类加载的时候就完成了实例化，如果从始至终没有使用这个实例，则会造成内存的浪费。
+
+------
+
+**2、饿汉式(静态代码块)**
+
+```java
+public class Singleton {
+
+    //构造器私有化，防止外部new
+    private  Singleton() {
+    }
+
+    //本类内部创建对象实例
+    private static Singleton instantce;
+
+    //在静态方法块中，创建单例对象
+    static {
+        instantce = new Singleton();
+    }
+
+    //提供一个公有静态方法，返回实例对象
+    public static Singleton getInstance() {
+        return instantce;
+    }
+}
+```
+
+优缺点与静态常量写法一致
+
+------
+
+**3、懒汉式(线程不安全)**
+
+```java
+public class Singleton {
+
+    private static Singleton instantce;
+
+    //构造器私有化，防止外部new
+    private Singleton() {
+    }
+
+    //提供一个静态的公有方法，当使用到该方法时，才去进行实例化
+    public static Singleton getInstance() {
+        if (instantce == null) {
+            instantce = new Singleton();
+        }
+        return instantce;
+    }
+}
+```
+
+优点：避免内存的浪费
+
+缺点：当两个线程同时走进了if语句块时，便会产生多个实例，多线程下破坏单例模式，线程不安全。
+
+------
+
+**4、懒汉式(线程安全，同步方法)**
+
+```java
+public class Singleton {
+
+    private static Singleton instantce;
+
+    private Singleton() {
+    }
+
+    //加入同步代码，解决线程不安全问题
+    public static  synchronized Singleton getInstance() {
+        if (instantce == null) {
+            instantce = new Singleton();
+        }
+        return instantce;
+    }
+}
+```
+
+虽然解决了线程不安全问题，由于加了synchronized效率过低。
+
+------
+
+**5、懒汉式(线程不安全，同步方法块)**
+
+```java
+public class Singleton {
+
+    private static Singleton instantce;
+
+    private Singleton() {
+    }
+
+    public static  Singleton getInstance() {
+        if (instantce == null) {
+            //加入同步代码块，解决线程不安全问题
+            synchronized (Singleton.class){
+                instantce = new Singleton();
+            }
+        }
+        return instantce;
+    }
+}
+```
+
+效率问题虽然解决了，但是线程安全问题又出现了
+
+------
+
+**6、双重检查(DCL)**
+
+```java
+public class Singleton {
+
+    private  static volatile Singleton instantce;
+
+    private Singleton() {
+    }
+    //加入双重检查解决线程安全问题
+    public static  Singleton getInstance() {
+        if (instantce == null) {
+            synchronized (Singleton.class){
+                if (instantce ==null){
+                    instantce = new Singleton();
+                }
+            }
+        }
+        return instantce;
+    }
+}
+```
+
+解决了线程安全问题，也大大提高了效率。
+
+------
+
+**7、静态内部类**
+
+```java
+public class Singleton {
+
+    private Singleton() {
+    }
+
+    //写一个静态内部类，该类中有一个私有属性Singleton
+  	//在Singleton进行类加载时，并不会对静态内部类进行加载。
+    private static class SingletonInstance{
+        private static final Singleton INSTANCE = new Singleton();
+    }
+
+    //提供一个静态公有方法，直接返回SingletonInstance.INSTANCE
+    public static Singleton getInstance(){
+        return SingletonInstance.INSTANCE;
+    }
+}
+
+```
+
+静态内部类的特点：在类加载(Singleton)时不会对静态内部类进行加载(SingletonInstance)
+
+优点：
+
+- 采用类加载机制来保证初始化实例只有一个线程
+- 静态内部类方式在Singleton类被装载时并不会立即实例化，只有在调用getInstance方法时，去装在静态内部类SingletonInstance，从而完成Singleton的实例化。
+- 类的静态属性只会在第一次加载类的时候进行初始化，所以在这里JVM，帮助我们保证了线程的安全性，在类进行初始化时，别的线程是无法进入的
+
+------
+
+**8、枚举**
+
+```java
+public class SingletonTest {
+    enum Singleton {
+        INSTANCE;
+    }
+    public static void main(String[] args) {
+        Singleton s1=Singleton.INSTANCE;
+        Singleton s2=Singleton.INSTANCE;
+        System.out.println(s1==s2); //true
+        System.out.println(s1.hashCode()==s2.hashCode());//true
+
+    }
+   
+}
+```
+
+借助了jdk1.5中添加的枚举来实现单例模式。不仅解决了多线程同步问题，而且还能防止反序列化重写创建对象。
+
 ### 工厂方法模式
+
+工厂方法模式分为三种：
+
+**1、简单工厂方法模式**
+
+我们把被创建的对象称为“产品”，把创建产品的对象称为“工厂”。如果要创建的产品不多，只要一个工厂类就可以完成，这种模式叫“简单工厂模式”。
+
+在简单工厂模式中创建实例的方法通常为静态（static）方法，因此简单工厂模式（Simple Factory Pattern）又叫作静态工厂方法模式（Static Factory Method Pattern）。
+
+简单来说，简单工厂模式有一个具体的工厂类，可以生成多个不同的产品，属于创建型设计模式。简单工厂模式不在 GoF 23 种设计模式之列。
+
+简单工厂模式每增加一个产品就要增加一个具体产品类和一个对应的具体工厂类，这增加了系统的复杂度，违背了“开闭原则”。
+
+
+
+**2、多个工厂方法模式**
+
+**3、静态工厂方法模式**
 
 ### 抽象工厂模式
 
@@ -449,6 +700,41 @@ bean的自动装配指的是bean的属性值在进行注入的时候通过某种
 
 # Mybatis
 
+## Mybatis的优缺点
+
+**优点**：
+
+- JDBC相比，减少了50%以上的代码量，消除了JDBC大量冗余的代码，不需要手动开关连接；
+- 很好的与各种数据库兼容（因为MyBatis使用JDBC来连接数据库，所以只要JDBC支持的数据库MyBatis都支持，而JDBC提供了可扩展性，所以只要这个数据库有针对Java的jar包就可以就可以与MyBatis兼容），开发人员不需要考虑数据库的差异性。
+- 提供了很多第三方插件（分页插件 / 逆向工程）
+- 能够与Spring很好的集成
+- MyBatis相当灵活，不会对应用程序或者数据库的现有设计强加任何影响，SQL写在XML里，从程序代码中彻底分离，解除sql与程序代码的耦合，便于统一管理和优化，并可重用
+- 提供XML标签，支持编写动态SQL语句
+- 提供映射标签，支持对象与数据库的ORM字段关系映射
+- 提供对象关系映射标签，支持对象关系组建维护
+
+**缺点**：
+
+- SQL语句的编写工作量较大，尤其是字段多、关联表多时，更是如此，对开发人员编写SQL语句的功底有一定要求
+- SQL语句依赖于数据库，导致数据库移植性差，不能随意更换数据库
+
+## Mybatis中#{}和${}的区别
+
+- #{}是预编译处理，${}是字符串替换
+- Mybatis 在处理#{}时，会将 sql 中的#{}替换为?号，调用 PreparedStatement 的 set 方法来赋值；
+- Mybatis 在处理${}时，就是把${}替换成变量的值
+- 使用#{}可以有效的防止 SQL 注入，提高系统安全性
+
+## Mybatis插件运行原理及开发流程
+
+mybatis只支持针对ParameterHandler、ResultSetHandler、StatementHandler、Executor这四种接口的插件，mybatis使用jdk的动态代理，为需要拦截的接口生成代理对象以实现接口方法拦截功能，每当执行这四种接口对象的方法时，就会进入拦截方法，具体就是InvocationHandler的invoke方法，拦截那些你指定需要拦截的方法。
+
+编写插件：实现Mybatis的Interceptor接口并复写intercept方法啊，然后给插件编写注解，指定要拦截哪一个接口的哪些方法，在配置文件中配置编写的插件即可。
+
+```java
+@Intercepts({@Signature(type = StatementHandler.class,method = "parameterize",args = Statement.class)})
+```
+
 
 
 # JVM
@@ -465,7 +751,7 @@ bean的自动装配指的是bean的属性值在进行注入的时候通过某种
 
 # 数据库
 
-## mysql
+## MySQL
 
 
 
@@ -481,21 +767,21 @@ bean的自动装配指的是bean的属性值在进行注入的时候通过某种
 
 ![排序算法复杂度对比图](image/排序算法对比图.png)
 
-### 1、冒泡排序
+### 冒泡排序
 
-### 2、快速排序
+### 快速排序
 
-### 3、归并排序
+### 归并排序
 
-### 4、希尔排序
+### 希尔排序
 
-### 5、直接插入排序
+### 直接插入排序
 
-### 6、基数排序
+### 基数排序
 
-### 7、堆排序
+### 堆排序
 
-### 8、简单选择排序
+### 简单选择排序
 
 # 软件环境
 
