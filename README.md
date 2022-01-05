@@ -282,13 +282,10 @@ bean的自动装配指的是bean的属性值在进行注入的时候通过某种
 
 ## 对SpringBoot的理解
 
-
-
-
-
-## SpringBoot启动流程原理
-
-
+- 用来简化Spring应用的初始搭建以及开发过程，使用特定的方式来进行配置
+- 嵌入的tomcat无需部署war文件
+- 简化maven配置
+- 自动配置Spring添加对应的功能starter自动化配置
 
 
 
@@ -313,7 +310,8 @@ bean的自动装配指的是bean的属性值在进行注入的时候通过某种
 
 ## 对SpringMVC的理解
 
-
+- SpringMVC是一种基于Spring实现了MVC设计模式的Web框架
+- 将模型、视图、控制方法分离，实现职责解耦
 
 ## SpringMVC的工作流程
 
@@ -333,33 +331,33 @@ bean的自动装配指的是bean的属性值在进行注入的时候通过某种
 10、DispatcherServlet根据视图解析器解析的视图结果，调用具体的视图，进行试图渲染
 11、将响应数据返回给客户端
 
-## SpringMVC的九大组件
+## SpringMVC的主要组件
 
-1.HandlerMapping
+1.**HandlerMapping(处理器映射器)**
 根据request找到相应的处理器。因为Handler（Controller）有两种形式，一种是基于类的Handler，另一种是基于Method的Handler（也就是我们常用的）
 
-2.HandlerAdapter
+2.**HandlerAdapter(处理器适配器)**
 调用Handler的适配器。如果把Handler（Controller）当做工具的话，那么HandlerAdapter就相当于干活的工人
 
-3.HandlerExceptionResolver
+3.**HandlerExceptionResolver(处理器异常解析器)**
 对异常的处理
 
-4.ViewResolver
+4.**ViewResolver (视图解析器)**
 用来将String类型的视图名和Locale解析为View类型的视图
 
-5.RequestToViewNameTranslator
+5.**RequestToViewNameTranslator**
 有的Handler（Controller）处理完后没有设置返回类型，比如是void方法，这是就需要从request中获取viewName
 
-6.LocaleResolver
+6.**LocaleResolver**
 从request中解析出Locale。Locale表示一个区域，比如zh-cn，对不同的区域的用户，显示不同的结果，这就是i18n（SpringMVC中有具体的拦截器LocaleChangeInterceptor）
 
-7.ThemeResolver
+7.**ThemeResolver**
 主题解析，这种类似于我们手机更换主题，不同的UI，css等
 
-8.MultipartResolver
+8.**MultipartResolver**
 处理上传请求，将普通的request封装成MultipartHttpServletRequest
 
-9.FlashMapManager
+9.**FlashMapManager**
 用于管理FlashMap，FlashMap用于在redirect重定向中传递参数
 
 
@@ -386,7 +384,7 @@ bean的自动装配指的是bean的属性值在进行注入的时候通过某种
 2. 在子类中尽量不要重写父类的方法
 3. 在适当情况下，可以通过聚合、组合、依赖来解决问题
 
-### 开闭原则(**Open Close Principle**)
+### 开闭原则(Open Close Principle)
 
 ​	开闭原则就是说对**提供方**提供扩展开放，对**接收方**修改关闭。用抽象构建框架，用实现扩展细节；
 
@@ -607,7 +605,7 @@ public class Singleton {
     }
 
     //写一个静态内部类，该类中有一个私有属性Singleton
-  	//在Singleton进行类加载时，并不会对静态内部类进行加载。
+    //在Singleton进行类加载时，并不会对静态内部类进行加载。
     private static class SingletonInstance{
         private static final Singleton INSTANCE = new Singleton();
     }
@@ -652,39 +650,475 @@ public class SingletonTest {
 
 ### 工厂方法模式
 
-工厂方法模式分为三种：
+工厂方法模式分为两种种：
 
 **1、简单工厂方法模式**
 
 我们把被创建的对象称为“产品”，把创建产品的对象称为“工厂”。如果要创建的产品不多，只要一个工厂类就可以完成，这种模式叫“简单工厂模式”。
 
-在简单工厂模式中创建实例的方法通常为静态（static）方法，因此简单工厂模式（Simple Factory Pattern）又叫作静态工厂方法模式（Static Factory Method Pattern）。
+在简单工厂模式中创建实例的方法通常为静态方法，因此简单工厂模式又叫作静态工厂方法模式。
 
-简单来说，简单工厂模式有一个具体的工厂类，可以生成多个不同的产品，属于创建型设计模式。简单工厂模式不在 GoF 23 种设计模式之列。
+简单来说，简单工厂模式有一个具体的工厂类，可以生成多个不同的产品，属于创建型设计模式。
 
 简单工厂模式每增加一个产品就要增加一个具体产品类和一个对应的具体工厂类，这增加了系统的复杂度，违背了“开闭原则”。
 
+1、定义发送消息接口
+
+```java
+public interface Sender {
+	public void Send();
+}
+```
+
+2、创建实现类
+
+```java
+//邮箱发送
+public class MailSender implements Sender {
+	@Override
+	public void Send() {
+		System.out.println("这是邮箱发送!");
+	}
+}
+//手机短信
+public class PhoneSender implements Sender {
+ 
+	@Override
+	public void Send() {
+		System.out.println("这是手机短信发送!");
+	}
+}
+```
+
+3、创建工厂类
+
+```java
+public class SendFactory {
+ 
+	public Sender produce(String type) {
+		if ("mail".equals(type)) {
+			return new MailSender();
+		} else if ("phone".equals(type)) {
+			return new PhoneSender();
+		} else {
+			System.out.println("请输入正确的类型!");
+			return null;
+		}
+	}
+}
+```
+
+4、测试结果
+
+```java
+public class FactoryTest {
+ 
+	public static void main(String[] args) {
+		SendFactory factory = new SendFactory();
+		Sender sender = factory.produce("phone");
+		sender.Send();
+    //输出：这是手机短信发送!
+	}
+}
+```
 
 
-**2、多个工厂方法模式**
 
-**3、静态工厂方法模式**
+**2、普通工厂方法模式**
+
+普通工厂方法模式是对简单工厂模式的进一步抽象化，其好处是可以使系统在不修改原来代码的情况下引进新的产品。
+
+
+
+将上面的代码做下修改，改动下SendFactory类就行，如下：
+
+```java
+public class SendFactory {
+ 
+	public Sender produceMail(){
+		return new MailSender();
+	}
+	
+	public Sender producePhone(){
+		return new PhoneSender();
+	}
+}
+```
+
+测试类:
+
+```java
+public class FactoryTest {
+ 
+	public static void main(String[] args) {
+		SendFactory factory = new SendFactory();
+		Sender sender = factory.produceMail();
+		sender.Send();
+    //输出: 这是邮箱发送!
+	}
+}
+```
+
+使用场景：jdbc连接数据库，硬件访问，降低对象的产生和销毁
 
 ### 抽象工厂模式
 
+定义了一个interface用于创建相关或有依赖关系的对象簇，而无需指明具体的类。他是由简单工厂和工厂方法模式的整合，更利于代码的维护和扩展。
+
+1、定义两个接口
+
+```java
+//发送接口
+public interface Sender {
+	public void Send();
+}
+//提供具体工厂接口
+public interface Provider {
+	public Sender produce();
+}
+```
+
+2、实现类
+
+```java
+public class MailSender implements Sender {
+	@Override
+	public void Send() {
+		System.out.println("this is mailsender!");
+	}
+}
+
+public class SmsSender implements Sender {
+ 
+	@Override
+	public void Send() {
+		System.out.println("this is sms sender!");
+	}
+}
+```
+
+3、工厂类
+
+```java
+public class SendMailFactory implements Provider {
+	@Override
+	public Sender produce(){
+		return new MailSender();
+	}
+}
+
+public class SendSmsFactory implements Provider{
+ 
+	@Override
+	public Sender produce() {
+		return new SmsSender();
+	}
+}
+```
+
+4、测试类
+
+```java
+public class Test {
+ 
+	public static void main(String[] args) {
+		Provider provider = new SendMailFactory();
+		Sender sender = provider.produce();
+		sender.Send();
+	}
+}
+```
+
+这个模式的好处就是，如果你现在想增加一个功能：发及时信息，则只需做一个实现类，实现Sender接口，同时做一个工厂类，实现Provider接口，就OK了，无需去改动现成的代码。这样做，拓展性较好！
+
+
+
+使用场景：一个对象族（或是一组没有任何关系的对象）都有相同的约束。 涉及不同操作系统的时候，都可以考虑使用抽象工厂模式
+
 ### 建造者模式
 
+将一个复杂对象的构建与它的表示分离，使得同样的构建过程可以创建不同的表示。
+
+```java
+package com.example.test.DesignMode;
+
+public class Build {
+    static class Student {
+        String name = null;
+        int number = -1;
+        String sex = null;
+
+        public Student(Builder builder) {
+            this.name = builder.name;
+            this.number = builder.number;
+            this.sex = builder.sex;
+        }
+
+        static class Builder {
+            String name = null;
+            int number = -1;
+            String sex = null;
+
+            public Builder setName(String name) {
+                this.name = name;
+                return this;
+            }
+
+            public Builder setNumber(int number) {
+                this.number = number;
+                return this;
+            }
+
+            public Builder setSex(String sex) {
+                this.sex = sex;
+                return this;
+            }
+						//在此方法构建
+            public Student build() {
+                return new Student(this);
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        Student A = new Student.Builder().setName("张 三").setNumber(1).build();
+        Student B = new Student.Builder().setSex("男").setName("李 四").build();
+        System.out.println(A.name + " " + A.number + " " + A.sex);//张 三 1 男
+        System.out.println(B.name + " " + B.number + " " + B.sex);//李 四 -1 男
+    }
+}
+```
+
+在JDK中，StringBulider用到了建造者模式。
+
 ### 原型模式
+
+用原型实例指定创建对象的种类，并且通过拷贝这些原型创建新的对象。
+
+```java
+package com.example.test.DesignMode;
+
+//原型模式
+public class Prototype implements Cloneable {
+    private String name;
+
+    Prototype(){
+        this.name="初始化";
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @Override
+    protected Object clone() {
+        try {
+            return super.clone();
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static void main(String[] args) {
+        Prototype pro = new Prototype();
+        pro.setName("pro");
+        Prototype pro1 = (Prototype) pro.clone();
+        System.out.println(pro==pro1);//false
+        System.out.println(pro.hashCode()==pro1.hashCode());//false
+    }
+}
+```
+
+**使用原型模式的优点**：
+
+1.性能优良
+
+原型模式是在内存二进制流的拷贝，性能要比直接new一个对象快，在一个循环体内new大量对象时，原型模式可以更好地体现其优点。
+
+2.不会执行对象的构造函数
+
+**使用场景**：
+
+资源优化场景类初始化需要消化非常多的资源，这个资源包括数据、硬件资源等。
+
+性能和安全要求的场景通过new产生一个对象需要非常繁琐的数据准备或访问权限，则可以使用原型模式。
+
+一个对象多个修改者的场景 一个对象需要提供给其他对象访问，而且各个调用者可能都需要修改其值时，可以考虑使用原型模式拷贝多个对象供调用者使用。
+
+
 
 ## 结构型模式
 
 ### 适配器模式
 
+将一个类的接口变换成客户端所期待的另一种接口，从而使原本因接口不匹配而无法在一起工作的两个类能够在一起工作。
+
+主要可分为3种：
+
+- 类适配：创建新类，继承源类，并实现新接口，例如 class adapter extends oldClass implements newFunc{}
+- 对象适配：创建新类持源类的实例，并实现新接口，例如 class adapter implements newFunc { private oldClass oldInstance;}
+- 接口适配：创建新的抽象类实现旧接口方法。例如 abstract class adapter implements oldClassFunc { void newFunc();}
+
+**使用场景**：
+
+你有动机修改一个已经投产中的接口时，适配器模式可能是适合你的模式。比如系统扩展了，需要使用一个已有或新建立的类，但这个类又不符合系统的接口，怎么办？使用适配器模式，这也是我们例子中提到的。
+
 ### 桥接模式
+
+将抽象和实现解耦，使得两者可以独立地变化
+
+Circle类将DrwaApi与Shape类进行了桥接
+
+1、定义接口
+
+```java
+//绘画接口
+public interface DrawAPI {
+     void drawCircle(int radius, int x, int y);
+}
+```
+
+2、实现类
+
+```java
+//实现类-画红色的圆
+public class RedCircle implements DrawAPI {
+    @Override
+    public void drawCircle(int radius, int x, int y) {
+        System.out.println("Drawing Circle[ color: red, radius: " + radius +", x: " +x+", "+ y +"]");
+    }
+}
+//实现类-画绿色的圆
+public class GreenCircle implements DrawAPI {
+    @Override
+    public void drawCircle(int radius, int x, int y) {
+        System.out.println("Drawing Circle[ color: green, radius: " + radius +", x: " +x+", "+ y +"]");
+    }
+}
+
+```
+
+3、抽象类
+
+```java
+abstract class Shape {
+    protected DrawAPI drawAPI;
+
+    protected Shape(DrawAPI drawAPI) {
+        this.drawAPI = drawAPI;
+    }
+
+    public abstract void draw();
+}
+```
+
+4、形状类以及测试类
+
+```java
+class Circle extends Shape {
+    private int x, y, radius;
+
+    public Circle(int x, int y, int radius, DrawAPI drawAPI) {
+        super(drawAPI);
+        this.x = x;
+        this.y = y;
+        this.radius = radius;
+    }
+
+    public void draw() {
+        drawAPI.drawCircle(radius, x, y);
+    }
+
+    public static void main(String[] args) {
+        Shape redCircle = new Circle(100, 100, 10, new RedCircle());
+        Shape greenCircle = new Circle(100, 100, 10, new GreenCircle());
+        redCircle.draw();
+        greenCircle.draw();
+    }
+}
+
+```
+
+**使用场景:**
+
+1. 不希望或不适用使用继承的场景
+
+2. 接口或抽象类不稳定的场景
+
+3. 重用性要求较高的场景
 
 ### 组合模式
 
+将对象组合成树形结构以表示“部分-整体”的层次结构，使得用户对单个对象和组合对象的使用具有一致性。
+
+```java
+public class Composite extends Component {
+    //构件容器
+    private ArrayList componentArrayList = new ArrayList();
+
+    //增加一个叶子构件或树枝构件
+    public void add(Component component) {
+        this.componentArrayList.add(component);
+    }
+
+    //删除一个叶子构件或树枝构件
+    public void remove(Component component) {
+        this.componentArrayList.remove(component);
+    }
+
+    //获得分支下的所有叶子构件和树枝构件
+    public ArrayList getChildren() {
+        return this.componentArrayList;
+    }
+}
+```
+
+**使用场景:**
+
+1. 维护和展示部分-整体关系的场景，如树形菜单、文件和文件夹管理。
+
+2. 从一个整体中能够独立出部分模块或功能的场景。
+
 ### 装饰模式
+
+动态地给一个对象添加一些额外的职责。就增加功能来说，装饰器模式相比生成子类更为灵活 。
+
+```java
+public interface Source
+{
+    void method();
+}
+
+public class Decorator implements Source {
+    private Source source ;
+
+    public void decorate() {
+        System.out.println("decorate");
+    }
+
+    @Override
+    public void method() {
+      	//在方法调用前进行装饰
+        decorate();
+        source.method();
+    }
+}
+```
+
+**使用场景:**
+
+1. 需要扩展一个类的功能，或给一个类增加附加功能。
+
+2. 需要动态地给一个对象增加功能，这些功能可以再动态地撤销。
+
+3. 需要为一批的兄弟类进行改装或加装功能，当然是首选装饰模式。
+
+
 
 ### 外观模式
 
@@ -993,6 +1427,79 @@ ln -s /usr/local/nodejs/node-v9.11.2-linux-x64/bin/cnpm  /usr/local/bin/cnpm
 
 
 
+## Linux下安装Redis
+
+1、下载安装包
+
+```shell
+wget http://download.redis.io/releases/redis-3.0.7.tar.gz
+```
+
+2、安装[gcc](https://so.csdn.net/so/search?q=gcc)，编译的时候需要依赖gcc环境
+
+```shell
+ yum install gcc-c++
+```
+
+3、解压安装包
+
+```shell
+tar -zxvf redis-3.0.7.tar.gz
+```
+
+4、移动文件夹
+
+```shell
+mv redis-3.0.7 /usr/local/
+```
+
+5、编译 且安装
+
+```shell
+make #编译
+make PREFIX=/usr/local/redis install #安装
+cp redis.conf /usr/local/redis #复制配置文件
+```
+
+6、将redis启动模式改为后端启动
+
+```shell
+vi /usr/local/redis/redis.conf
+```
+
+<img src="image/redis安装.png" alt="redis安装" style="zoom:150%;" />
+
+7、启动redis
+
+```shell
+./bin/redis-server ./redis.conf
+```
+
+8、登陆redis（阿里云先设置安全组策略）
+
+```shell
+./bin/redis-cli -h {ip} -p 6379 #{ip} 是你服务器的ip
+./bin/redis-cli -h {ip} -p 6379 -a 123456 #有密码时的指令
+```
+
+9、设置密码
+
+```shell
+#修改redis.conf配置文件　　
+
+# requirepass foobared
+requirepass 123456   指定密码123456
+```
+
+10、设置日志输出地址(解决Redis关闭报错问题)
+
+```shell
+#修改redis.conf配置文件　　
+
+# output for logging but daemonize, logs will be sent to /dev/null
+logfile "/usr/local/redis/redis_log.log " #注意logfile 后面一定要留空格 保存并退出
+```
+
 ## Mac下安装Maven
 
 1、下载资源包
@@ -1139,10 +1646,34 @@ git branch -m br_rename_old br_rename_new //将本地仓库的br_rename_old的�
 sudo killall -HUP mDNSResponder ##清除DNS缓存
 ```
 
+## SpringBoot下跨域问题
+
+通过实现WebMvcConfigurer接口然后重写addCorsMappings方法解决跨域问题。
+
+```java
+@Configuration
+public class CorsConfig implements WebMvcConfigurer {
+
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**")
+                .allowedOrigins("*")
+                .allowCredentials(true)
+                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                .maxAge(3600);
+    }
+
+}	
+```
+
 
 
 # 常用指令
 
 ```shell
+
 nohup java -jar epidemic-0.0.1-SNAPSHOT.jar >	 /dev/null 2>&1 &  ##Jar包后台启动指令
+
+nc -vz -w 2 192.168.1.1 8080 #mac下ping端口指令
+telnet 192.168.1.1 8080 #windows下ping端口指令
 ```
