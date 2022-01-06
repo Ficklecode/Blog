@@ -406,13 +406,132 @@ bean的自动装配指的是bean的属性值在进行注入的时候通过某种
 
 ### 访问者模式
 
+封装一些作用于某种数据结构中的各元素的操作，它可以在不改变数据结构的前提下定义作用于这些元素的新的操作。
+
+**使用场景:**
+
+1. 一个对象结构包含很多类对象，它们有不同的接口，而你想对这些对象实施一些依赖于其具体类的操作，也就说是用迭代器模式已经不能胜任的情景。
+
+2. 需要对一个对象结构中的对象进行很多不同并且不相关的操作，而你想避免让这些操作“污染”这些对象的类。
+
 ### 模板模式
+
+定义一个操作中的算法的框架，而将一些步骤延迟到子类中。使得子类可以不改变一个算法的结构即可重定义该算法的某些特定步骤。
+
+**使用场景:**
+
+1. 多个子类有公有的方法，并且逻辑基本相同时。
+
+2. 重要、复杂的算法，可以把核心算法设计为模板方法，周边的相关细节功能则由各个子类实现。
+
+3. 重构时，模板方法模式是一个经常使用的模式，把相同的代码抽取到父类中，然后通过钩子函数（见“模板方法模式的扩展”）约束其行为。
 
 ### 策略模式
 
+定义一组算法，将每个算法都封装起来，并且使它们之间可以互换。
+
+**使用场景:**
+
+1. 多个类只有在算法或行为上稍有不同的场景。
+
+2. 算法需要自由切换的场景。
+
+3. 需要屏蔽算法规则的场景。
+
 ### 状态模式
 
+当一个对象内在状态改变时允许其改变行为，这个对象看起来像改变了其类。
+
+**使用场景：**
+
+1. 行为随状态改变而改变的场景这也是状态模式的根本出发点，例如权限设计，人员的状态不同即使执行相同的行为结果也会不同，在这种情况下需要考虑使用状态模式。
+
+2. 条件、分支判断语句的替代者
+
 ### 观察者模式
+
+定义对象间一种一对多的依赖关系，使得每当一个对象改变状态，则所有依赖于它的对象都会得到通知并被自动更新。
+
+1、观察者接口
+
+```java
+public interface Observer {
+    void response();
+}
+```
+
+2、实现类
+
+```java
+public class ConcreteObserver2 implements Observer {
+    @Override
+    public void response() {
+        System.out.println("1号观察者作出反应！");
+    }
+}
+public class ConcreteObserver2 implements Observer {
+    @Override
+    public void response() {
+        System.out.println("2号观察者作出反应！");
+    }
+}
+```
+
+3、抽象目标
+
+```java
+public abstract class Subject {
+    //定义一个观察者数组
+    protected Vector<Observer> obsVector = new Vector();
+
+    //增加一个观察者
+    public void addObserver(Observer o) {
+        this.obsVector.add(o);
+    }
+
+    //删除一个观察者
+    public void delObserver(Observer o) {
+        this.obsVector.remove(o);
+    }
+
+    //通知观察者方法
+    public abstract void notifyObserver();
+
+}
+```
+
+4、真实目标
+
+```java
+public class ConcreteSubject extends Subject{
+    @Override
+    public void notifyObserver() {
+        for (Observer obs : obsVector) {
+            obs.response();
+        }
+    }
+
+		//测试方法
+    public static void main(String[] args) {
+        Subject subject=new ConcreteSubject();
+        Observer concreteSubject1=new ConcreteObserver1();
+        Observer concreteSubject2=new ConcreteObserver2();
+        subject.addObserver(concreteSubject1);
+        subject.addObserver(concreteSubject2);
+
+        subject.notifyObserver();
+    }
+}
+
+```
+
+**使用场景:**
+
+1. 关联行为场景。需要注意的是，关联行为是可拆分的，而不是“组合”关系。
+
+2. 事件多级触发场景。
+
+3. 跨系统的消息交换场景，如消息队列的处理机制
 
 ### 备忘录模式
 
@@ -968,7 +1087,7 @@ public class Prototype implements Cloneable {
 
 你有动机修改一个已经投产中的接口时，适配器模式可能是适合你的模式。比如系统扩展了，需要使用一个已有或新建立的类，但这个类又不符合系统的接口，怎么办？使用适配器模式，这也是我们例子中提到的。
 
-### 桥接模式
+### 桥接模式(桥梁模式)
 
 将抽象和实现解耦，使得两者可以独立地变化
 
@@ -1084,7 +1203,7 @@ public class Composite extends Component {
 
 2. 从一个整体中能够独立出部分模块或功能的场景。
 
-### 装饰模式
+### 装饰器模式
 
 动态地给一个对象添加一些额外的职责。就增加功能来说，装饰器模式相比生成子类更为灵活 。
 
@@ -1120,11 +1239,140 @@ public class Decorator implements Source {
 
 
 
-### 外观模式
+### 外观模式(门面模式)
+
+要求一个子系统的外部与其内部的通信必须通过一个统一的对象进行。外观模式提供一个高层次的接口，使得子系统更易于使用。
+
+```java
+public class Facade {
+    private SubSystem1 subSystem1 = new SubSystem1();
+    private SubSystem2 subSystem2 = new SubSystem2();
+    private SubSystem3 subSystem3 = new SubSystem3();
+
+    public void startSystem() {
+        subSystem1.start();
+        subSystem2.start();
+        subSystem3.start();
+    }
+
+    public void stopSystem() {
+        subSystem1.stop();
+        subSystem2.stop();
+        subSystem3.stop();
+    }
+}
+```
+
+**使用场景：**
+
+1. 为一个复杂的模块或子系统提供一个供外界访问的接口
+
+2. 子系统相对独立——外界对子系统的访问只要黑箱操作即可
+
+3. 预防低水平人员带来的风险扩散
 
 ### 亨元模式
 
+使用共享对象的方法，用来尽可能减少内存使用量以及分享资讯。
+
+1、抽象类-flywei
+
+```java
+abstract class flywei {}
+```
+
+2、对象-Flyweight
+
+```java
+public class Flyweight extends flywei {
+    Object obj;
+
+    public Flyweight(Object obj) {
+        this.obj = obj;
+    }
+}
+```
+
+3、工厂类-FlyweightFactory
+
+```java
+public class FlyweightFactory {
+    private HashMap data;
+
+    public FlyweightFactory() {
+        data = new HashMap<>();
+    }
+
+    public Flyweight getFlyweight(Object object) {
+        if (data.containsKey(object)) {
+            return (Flyweight) data.get(object);
+        } else {
+            Flyweight flyweight = new Flyweight(object);
+            data.put(object, flyweight);
+            return flyweight;
+        }
+    }
+}
+```
+
+**使用场景：**
+
+1. 系统中存在大量的相似对象。
+
+2. 细粒度的对象都具备较接近的外部状态，而且内部状态与环境无关，也就是说对象没有特定身份。
+
+3. 需要缓冲池的场景。
+
 ### 代理模式
+
+为其他对象提供一种代理以控制对这个对象的访问。
+
+1、创建接口-Source
+
+```java
+public interface Source {
+    void method();
+}
+```
+
+2、继承类-OldClass
+
+```
+public class OldClass  implements Source {
+    @Override
+    public void method() {
+
+    }
+}
+```
+
+3、代理类
+
+```java
+//代理模式
+public class Proxy implements Source {
+    private Source source = new OldClass();
+
+    void doSomething() {
+    }
+
+    @Override
+    public void method() {
+        preRequest();
+        source.method();
+        postRequest();
+        doSomething();
+    }
+
+    public void preRequest() {
+        System.out.println("访问具体方法前操作");
+    }
+
+    public void postRequest() {
+        System.out.println("访问具体方法后操作");
+    }
+}
+```
 
 
 
